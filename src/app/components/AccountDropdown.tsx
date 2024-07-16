@@ -16,7 +16,7 @@ const AccountDropdown = async () => {
             <DropdownMenuTrigger>
                 <Avatar>
                     <AvatarImage src={session?.user?.image!} />
-                    <AvatarFallback>My Account</AvatarFallback>
+                    <AvatarFallback>{session?.user?.name?.charAt(0)}</AvatarFallback>
                 </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
