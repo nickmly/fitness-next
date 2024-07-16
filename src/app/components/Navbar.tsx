@@ -21,12 +21,6 @@ const Navbar = async () => {
                     }
                 } /> :
                 <AccountDropdown />
-                // <LogoutButton performLogout={
-                //     async () => {
-                //         'use server'
-                //         await signOut()
-                //     }
-                // } />
             }
 
         </nav>
