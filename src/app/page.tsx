@@ -1,5 +1,4 @@
-import { auth, signIn, signOut } from "@/auth"
-import { Button } from "@/components/ui/button";
+import { auth } from "@/auth"
 
 export default async function Home() {
   const session = await auth()
