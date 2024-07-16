@@ -6,28 +6,10 @@ export default async function Home() {
 
   return (
     <>
-      Home Page
+
       {session?.user ?
-        <>
-          <p>{session?.user?.name}</p>
-          <form
-            action={async () => {
-              "use server"
-              await signOut()
-            }}
-          >
-            <Button type="submit">Sign out</Button>
-          </form>
-        </>
-        :
-        <form
-          action={async () => {
-            "use server"
-            await signIn("google")
-          }}
-        >
-          <Button type="submit">Signin with Google</Button>
-        </form>
+        <p>{session?.user?.name}</p>
+        : <p>Home Page</p>
       }
     </>
   );

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Noto_Sans } from "next/font/google";
 import "./globals.css";
+import Navbar from "./components/Navbar";
 
 const notoSans = Noto_Sans({ subsets: ["latin"] });
 
@@ -15,9 +16,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body className={notoSans.className}>
-        <main>
+        <Navbar />
+        <main className="p-5">
           {children}
         </main>
       </body>
