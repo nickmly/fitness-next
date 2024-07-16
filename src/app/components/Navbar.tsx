@@ -3,6 +3,7 @@ import { Dumbbell } from 'lucide-react'
 import { auth, signIn, signOut } from "@/auth"
 import LoginButton from './LoginButton'
 import LogoutButton from './LogoutButton'
+import AccountDropdown from './AccountDropdown'
 
 const Navbar = async () => {
     const session = await auth()
@@ -19,12 +20,13 @@ const Navbar = async () => {
                         await signIn()
                     }
                 } /> :
-                <LogoutButton performLogout={
-                    async () => {
-                        'use server'
-                        await signOut()
-                    }
-                } />
+                <AccountDropdown />
+                // <LogoutButton performLogout={
+                //     async () => {
+                //         'use server'
+                //         await signOut()
+                //     }
+                // } />
             }
 
         </nav>

@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import { Button } from '@/components/ui/button'
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
 
 interface Props {
     performLogout: () => void
@@ -8,7 +8,9 @@ interface Props {
 
 const LogoutButton = ({ performLogout }: Props) => {
     return (
-        <Button className='bg-transparent border-primary hover:bg-primary hover:text-background' variant='outline' onClick={() => performLogout()}>Logout</Button>
+        <DropdownMenuItem className='cursor-pointer' onClick={() => performLogout()}>
+            Logout
+        </DropdownMenuItem>
     )
 }
 
