@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Noto_Sans } from "next/font/google";
 import "./globals.css";
-import Navbar from "./components/Navbar";
+import Navbar from "../components/navigation/Navbar";
 
 const notoSans = Noto_Sans({ subsets: ["latin"] });
 

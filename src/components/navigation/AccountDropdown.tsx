@@ -1,5 +1,5 @@
 import React from 'react'
-import { DropdownMenu, DropdownMenuLabel, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuSeparator } from '@/components/ui/dropdown-menu'
+import { DropdownMenu, DropdownMenuLabel, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuSeparator } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { auth, signOut } from '@/auth'
 import LogoutButton from './LogoutButton'

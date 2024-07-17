@@ -8,7 +8,7 @@ interface Props {
 
 const LoginButton = ({ performLogin }: Props) => {
     return (
-        <Button onClick={() => performLogin()}>Login</Button>
+        <Button data-testid='login-btn' onClick={() => performLogin()}>Login</Button>
     )
 }
 
