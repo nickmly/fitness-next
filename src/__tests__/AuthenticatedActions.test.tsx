@@ -3,7 +3,8 @@ import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 
 jest.mock('../components/navigation/AccountDropdown', () => {
-    return () => <div data-testid='account-dropdown' />
+    const MockAccountDropdown = () => <div data-testid='account-dropdown' />
+    return MockAccountDropdown
 })
 
 describe('AuthenticatedActions', () => {
