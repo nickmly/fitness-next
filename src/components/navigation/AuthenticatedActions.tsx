@@ -3,15 +3,14 @@ import LoginButton from './LoginButton'
 import AccountDropdown from './AccountDropdown'
 
 interface Props {
-    performLogin: () => void
     authenticated: boolean
 }
 
-const AuthenticatedActions = ({ performLogin, authenticated }: Props) => {
+const AuthenticatedActions = ({ authenticated }: Props) => {
     return (
         <>
             {!authenticated ?
-                <LoginButton performLogin={performLogin} /> :
+                <LoginButton /> :
                 <AccountDropdown />
             }
         </>

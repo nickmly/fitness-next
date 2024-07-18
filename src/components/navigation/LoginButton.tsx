@@ -1,14 +1,13 @@
 'use client'
 import React from 'react'
 import { Button } from '@/components/ui/button'
+import { useRouter } from 'next/navigation'
 
-interface Props {
-    performLogin: () => void
-}
 
-const LoginButton = ({ performLogin }: Props) => {
+const LoginButton = () => {
+    const router = useRouter()
     return (
-        <Button data-testid='login-btn' onClick={() => performLogin()}>Login</Button>
+        <Button data-testid='login-btn' onClick={() => router.push("/login")}>Login</Button>
     )
 }
 

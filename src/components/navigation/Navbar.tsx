@@ -10,10 +10,6 @@ const Navbar = async () => {
             <MenuSheet />
             <AuthenticatedActions
                 authenticated={session?.user !== undefined}
-                performLogin={async () => {
-                    'use server'
-                    await signIn()
-                }}
             />
         </nav>
     )
