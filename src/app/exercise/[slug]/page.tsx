@@ -1,5 +1,5 @@
 import { getExerciseBySlug } from '@/app/actions/exercise'
-import ExerciseImage from '@/components/ExerciseImage'
+import ExerciseCard from '@/components/exercise/ExerciseCard'
 import { Exercise } from '@prisma/client'
 import React from 'react'
 
@@ -15,16 +15,7 @@ const ExercisePage = async ({ params: { slug } }: Props) => {
         return <p>Exercise not found</p>
     }
     return (
-        <div>
-            <ExerciseImage exercise={exercise} />
-            {exercise &&
-                <ul className="list-disc">
-                    {exercise.instructions.map(i =>
-                        <li key={i} className="my-2">{i}</li>
-                    )}
-                </ul>
-            }
-        </div>
+        <ExerciseCard exercise={exercise} />
     )
 }
 

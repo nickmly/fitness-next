@@ -7,16 +7,16 @@ interface Props {
     exercise: Exercise | null
 }
 
-const ExerciseImage = ({ exercise }: Props) => {
+const ExerciseImages = ({ exercise }: Props) => {
     return (
         <>
             {exercise &&
-                <>
+                <div className="flex justify-around gap-3 flex-wrap">
                     {exercise.images.map(image => <CldImage key={image} src={image} alt={exercise.name} width={320} height={240} />)}
-                </>
+                </div>
             }
         </>
     )
 }
 
-export default ExerciseImage
+export default ExerciseImages
