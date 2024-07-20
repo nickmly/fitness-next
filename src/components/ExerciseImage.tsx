@@ -12,7 +12,7 @@ const ExerciseImage = ({ exercise }: Props) => {
         <>
             {exercise &&
                 <>
-                    {exercise.images.map(image => <CldImage src={image} alt={exercise.name} width={320} height={240} />)}
+                    {exercise.images.map(image => <CldImage key={image} src={image} alt={exercise.name} width={320} height={240} />)}
                 </>
             }
         </>
