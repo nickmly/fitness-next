@@ -1,19 +1,18 @@
 import React from 'react'
 import { auth, providerMap, signIn } from '@/auth'
 import { AuthError } from 'next-auth'
-import Image from 'next/image';
-import githubIcon from '../../../public/github.svg';
-import googleIcon from '../../../public/google.svg';
 import { Button } from '@/components/ui/button';
 import { redirect } from 'next/navigation';
+import GitHubIcon from '@/svgr/github';
+import GoogleIcon from '@/svgr/google';
 
 interface ProviderIconMap {
     [key: string]: any
 }
 
 const providerIcons: ProviderIconMap = {
-    'github': <Image src={githubIcon} alt='GitHub icon' />,
-    'google': <Image src={googleIcon} alt='Google icon' />
+    'github': <GitHubIcon className='fill-secondary w-6 h-6' />,
+    'google': <GoogleIcon className='fill-secondary w-6 h-6' />
 }
 
 const renderProviderIcon = (id: string) => {
