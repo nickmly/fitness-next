@@ -10,7 +10,11 @@ interface Props {
 const ExerciseImage = ({ exercise }: Props) => {
     return (
         <>
-            {exercise && <CldImage src={exercise.images[0]} alt={exercise.name} width={320} height={240} />}
+            {exercise &&
+                <>
+                    {exercise.images.map(image => <CldImage src={image} alt={exercise.name} width={320} height={240} />)}
+                </>
+            }
         </>
     )
 }
