@@ -10,6 +10,9 @@
     "lint": "next lint",
     "test": "jest",
     "test:watch": "jest --watch",
+    "prisma:generate": "dotenv -e .env.local -- npx prisma generate",
+    "prisma:migrate": "dotenv -e .env.local -- npx prisma migrate dev",
+    "prisma:pull": "dotenv -e .env.local -- npx prisma db pull",
     "prisma:push": "dotenv -e .env.local -- npx prisma db push",
     "prisma:studio": "dotenv -e .env.local -- npx prisma studio"
   },
@@ -27,10 +30,12 @@
     "lucide-react": "^0.408.0",
     "next": "14.2.5",
     "next-auth": "^5.0.0-beta.19",
+    "next-cloudinary": "^6.6.2",
     "react": "^18",
     "react-dom": "^18",
     "tailwind-merge": "^2.4.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "zod-prisma-types": "^3.1.8"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.4.6",
