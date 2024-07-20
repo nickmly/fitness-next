@@ -6,7 +6,7 @@ import AuthenticatedActions from './AuthenticatedActions'
 const Navbar = async () => {
     const session = await auth()
     return (
-        <nav className='bg-secondary p-6 text-white flex justify-between'>
+        <nav className='bg-secondary p-6 text-primary flex justify-between'>
             <MenuSheet />
             <AuthenticatedActions
                 authenticated={session?.user !== undefined}
