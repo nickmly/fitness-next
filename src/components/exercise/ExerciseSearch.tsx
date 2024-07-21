@@ -38,13 +38,13 @@ const ExerciseSearch = () => {
         if (toggle) {
             document.body.classList.add("disable-scroll")
         } else {
+            setSearchTerm('')
             document.body.classList.remove("disable-scroll")
         }
     }
 
     const onClickExercise = (exercise: Exercise) => {
         toggleSearch(false)
-        setSearchTerm('')
         router.push(`/exercises/${exercise.slug}`)
     }
 
@@ -59,11 +59,8 @@ const ExerciseSearch = () => {
                             onChange={(event) => setSearchTerm(event.target.value)}
                             placeholder='Search for an exercise'
                             start={<SearchIcon />}
-                            end={<Button variant='clear' title='Clear search' className='text-muted-foreground' onClick={() => setSearchTerm('')}><XIcon /></Button>}
+                            end={<Button variant='clear' title='Close search' className='text-muted-foreground' onClick={() => toggleSearch(false)}><XIcon /></Button>}
                         />
-                        <Button variant='outline' title='Close search' onClick={() => toggleSearch(false)}>
-                            <XIcon />
-                        </Button>
                     </div>
 
                     {foundExercises.length > 0 &&
