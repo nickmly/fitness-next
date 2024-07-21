@@ -14,7 +14,8 @@ export async function searchExercises(term: string) {
     const exercises = await prisma.exercise.findMany({
         where: {
             name: {
-                contains: term
+                contains: term,
+                mode: "insensitive"
             }
         }
     })
