@@ -52,8 +52,10 @@ const ExerciseSearch = () => {
         isSearchOpen ?
             createPortal(
                 <div className='fixed top-0 overflow-y-auto w-full h-full bg-black p-6'>
-                    <div className='flex gap-2'>
+                    <div className='flex justify-center gap-2 w-full'>
                         <Input
+                            className='w-full'
+                            containerClassName='max-w-[1000px]'
                             autoFocus
                             value={searchTerm}
                             onChange={(event) => setSearchTerm(event.target.value)}
@@ -64,8 +66,8 @@ const ExerciseSearch = () => {
                     </div>
 
                     {foundExercises.length > 0 &&
-                        <div className='mt-5 flex flex-col gap-2 justify-start'>
-                            {foundExercises.map(e => <Button variant='secondary' key={e.slug} onClick={() => onClickExercise(e)}>{e.name}</Button>)}
+                        <div className='mt-5 flex flex-col gap-2 items-center w-full'>
+                            {foundExercises.map(e => <Button variant='secondary' className='w-full max-w-[1000px]' key={e.slug} onClick={() => onClickExercise(e)}>{e.name}</Button>)}
                         </div>
                     }
                 </div>,
