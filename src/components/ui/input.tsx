@@ -8,8 +8,8 @@ export interface InputProps
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, ...props }, ref) => {
-    const StartIcon = props.startIcon
+  ({ className, type, startIcon, ...props }, ref) => {
+    const StartIcon = startIcon
     return (
       <div className="w-full relative">
         <div className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground">
