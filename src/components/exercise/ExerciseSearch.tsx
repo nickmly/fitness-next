@@ -43,35 +43,37 @@ const ExerciseSearch = () => {
     }
 
     const onClickExercise = (exercise: Exercise) => {
-        router.push(`/exercises/${exercise.slug}`)
         toggleSearch(false)
+        setSearchTerm('')
+        router.push(`/exercises/${exercise.slug}`)
     }
 
     return (
         isSearchOpen ?
             createPortal(
-                <div className='fixed top-0 overflow-y-auto w-full h-full bg-black/95 p-6'>
+                <div className='fixed top-0 overflow-y-auto w-full h-full bg-black p-6'>
                     <div className='flex gap-2'>
                         <Input
                             autoFocus
                             value={searchTerm}
                             onChange={(event) => setSearchTerm(event.target.value)}
                             placeholder='Search for an exercise'
-                            startIcon={<SearchIcon />}
+                            start={<SearchIcon />}
+                            end={<Button variant='clear' title='Clear search' className='text-muted-foreground' onClick={() => setSearchTerm('')}><XIcon /></Button>}
                         />
-                        <Button variant='outline' onClick={() => toggleSearch(false)}>
+                        <Button variant='outline' title='Close search' onClick={() => toggleSearch(false)}>
                             <XIcon />
                         </Button>
                     </div>
 
                     {foundExercises.length > 0 &&
                         <div className='mt-5 flex flex-col gap-2 justify-start'>
-                            {foundExercises.map(e => <Button key={e.slug} onClick={() => onClickExercise(e)}>{e.name}</Button>)}
+                            {foundExercises.map(e => <Button variant='secondary' key={e.slug} onClick={() => onClickExercise(e)}>{e.name}</Button>)}
                         </div>
                     }
                 </div>,
                 document.body) :
-            <Button variant="outline" className='mb-5 flex gap-2' onClick={() => toggleSearch(true)}>
+            <Button variant='outline' className='mb-5 flex gap-2' title='Open search' onClick={() => toggleSearch(true)}>
                 <SearchIcon />
                 Search
             </Button>
