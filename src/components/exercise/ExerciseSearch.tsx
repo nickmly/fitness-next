@@ -67,7 +67,7 @@ const ExerciseSearch = () => {
 
                     {foundExercises.length > 0 &&
                         <div className='mt-5 flex flex-col gap-2 items-center w-full'>
-                            {foundExercises.map(e => <Button variant='secondary' className='w-full max-w-[1000px]' key={e.slug} onClick={() => onClickExercise(e)}>{e.name}</Button>)}
+                            {foundExercises.map(e => <Button variant='secondary' className='w-full max-w-[1000px] whitespace-normal' key={e.slug} onClick={() => onClickExercise(e)}>{e.name}</Button>)}
                         </div>
                     }
                 </div>,
