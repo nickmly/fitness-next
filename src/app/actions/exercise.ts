@@ -1,5 +1,5 @@
-"use server"
-import prisma from "../../../prisma/client"
+'use server'
+import prisma from '../../../prisma/client'
 
 export async function getExerciseBySlug(slug: string) {
     const exercise = await prisma.exercise.findUnique({
@@ -15,7 +15,7 @@ export async function searchExercises(term: string) {
         where: {
             name: {
                 contains: term,
-                mode: "insensitive"
+                mode: 'insensitive'
             }
         }
     })

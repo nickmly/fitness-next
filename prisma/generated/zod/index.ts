@@ -22,11 +22,22 @@ export const VerificationTokenScalarFieldEnumSchema = z.enum(['identifier','toke
 
 export const ExerciseScalarFieldEnumSchema = z.enum(['slug','name','force','level','mechanic','equipment','primaryMuscles','secondaryMuscles','instructions','category','images']);
 
+export const LoggedExerciseScalarFieldEnumSchema = z.enum(['id','exerciseSlug','logId']);
+
+export const TypedSetScalarFieldEnumSchema = z.enum(['id','type','loggedExerciseId','weight','reps','distance','minutes','seconds']);
+
+export const LogScalarFieldEnumSchema = z.enum(['id','date','userId']);
+
 export const SortOrderSchema = z.enum(['asc','desc']);
 
 export const QueryModeSchema = z.enum(['default','insensitive']);
 
 export const NullsOrderSchema = z.enum(['first','last']);
+
+export const SetTypeSchema = z.enum(['WEIGHT_REPS','TIME_DISTANCE']);
+
+export type SetTypeType = `${z.infer<typeof SetTypeSchema>}`
+
 /////////////////////////////////////////
 // MODELS
 /////////////////////////////////////////
@@ -116,6 +127,47 @@ export const ExerciseSchema = z.object({
 export type Exercise = z.infer<typeof ExerciseSchema>
 
 /////////////////////////////////////////
+// LOGGED EXERCISE SCHEMA
+/////////////////////////////////////////
+
+export const LoggedExerciseSchema = z.object({
+  id: z.string().uuid(),
+  exerciseSlug: z.string(),
+  logId: z.string().nullable(),
+})
+
+export type LoggedExercise = z.infer<typeof LoggedExerciseSchema>
+
+/////////////////////////////////////////
+// TYPED SET SCHEMA
+/////////////////////////////////////////
+
+export const TypedSetSchema = z.object({
+  type: SetTypeSchema,
+  id: z.string().uuid(),
+  loggedExerciseId: z.string().nullable(),
+  weight: z.number().int(),
+  reps: z.number().int(),
+  distance: z.string(),
+  minutes: z.number().int(),
+  seconds: z.number().int(),
+})
+
+export type TypedSet = z.infer<typeof TypedSetSchema>
+
+/////////////////////////////////////////
+// LOG SCHEMA
+/////////////////////////////////////////
+
+export const LogSchema = z.object({
+  id: z.string().uuid(),
+  date: z.string(),
+  userId: z.string(),
+})
+
+export type Log = z.infer<typeof LogSchema>
+
+/////////////////////////////////////////
 // SELECT & INCLUDE
 /////////////////////////////////////////
 
@@ -125,6 +177,7 @@ export type Exercise = z.infer<typeof ExerciseSchema>
 export const UserIncludeSchema: z.ZodType<Prisma.UserInclude> = z.object({
   accounts: z.union([z.boolean(),z.lazy(() => AccountFindManyArgsSchema)]).optional(),
   sessions: z.union([z.boolean(),z.lazy(() => SessionFindManyArgsSchema)]).optional(),
+  logs: z.union([z.boolean(),z.lazy(() => LogFindManyArgsSchema)]).optional(),
   _count: z.union([z.boolean(),z.lazy(() => UserCountOutputTypeArgsSchema)]).optional(),
 }).strict()
 
@@ -140,6 +193,7 @@ export const UserCountOutputTypeArgsSchema: z.ZodType<Prisma.UserCountOutputType
 export const UserCountOutputTypeSelectSchema: z.ZodType<Prisma.UserCountOutputTypeSelect> = z.object({
   accounts: z.boolean().optional(),
   sessions: z.boolean().optional(),
+  logs: z.boolean().optional(),
 }).strict();
 
 export const UserSelectSchema: z.ZodType<Prisma.UserSelect> = z.object({
@@ -152,6 +206,7 @@ export const UserSelectSchema: z.ZodType<Prisma.UserSelect> = z.object({
   updatedAt: z.boolean().optional(),
   accounts: z.union([z.boolean(),z.lazy(() => AccountFindManyArgsSchema)]).optional(),
   sessions: z.union([z.boolean(),z.lazy(() => SessionFindManyArgsSchema)]).optional(),
+  logs: z.union([z.boolean(),z.lazy(() => LogFindManyArgsSchema)]).optional(),
   _count: z.union([z.boolean(),z.lazy(() => UserCountOutputTypeArgsSchema)]).optional(),
 }).strict()
 
@@ -231,6 +286,92 @@ export const ExerciseSelectSchema: z.ZodType<Prisma.ExerciseSelect> = z.object({
   images: z.boolean().optional(),
 }).strict()
 
+// LOGGED EXERCISE
+//------------------------------------------------------
+
+export const LoggedExerciseIncludeSchema: z.ZodType<Prisma.LoggedExerciseInclude> = z.object({
+  log: z.union([z.boolean(),z.lazy(() => LogArgsSchema)]).optional(),
+  sets: z.union([z.boolean(),z.lazy(() => TypedSetFindManyArgsSchema)]).optional(),
+  _count: z.union([z.boolean(),z.lazy(() => LoggedExerciseCountOutputTypeArgsSchema)]).optional(),
+}).strict()
+
+export const LoggedExerciseArgsSchema: z.ZodType<Prisma.LoggedExerciseDefaultArgs> = z.object({
+  select: z.lazy(() => LoggedExerciseSelectSchema).optional(),
+  include: z.lazy(() => LoggedExerciseIncludeSchema).optional(),
+}).strict();
+
+export const LoggedExerciseCountOutputTypeArgsSchema: z.ZodType<Prisma.LoggedExerciseCountOutputTypeDefaultArgs> = z.object({
+  select: z.lazy(() => LoggedExerciseCountOutputTypeSelectSchema).nullish(),
+}).strict();
+
+export const LoggedExerciseCountOutputTypeSelectSchema: z.ZodType<Prisma.LoggedExerciseCountOutputTypeSelect> = z.object({
+  sets: z.boolean().optional(),
+}).strict();
+
+export const LoggedExerciseSelectSchema: z.ZodType<Prisma.LoggedExerciseSelect> = z.object({
+  id: z.boolean().optional(),
+  exerciseSlug: z.boolean().optional(),
+  logId: z.boolean().optional(),
+  log: z.union([z.boolean(),z.lazy(() => LogArgsSchema)]).optional(),
+  sets: z.union([z.boolean(),z.lazy(() => TypedSetFindManyArgsSchema)]).optional(),
+  _count: z.union([z.boolean(),z.lazy(() => LoggedExerciseCountOutputTypeArgsSchema)]).optional(),
+}).strict()
+
+// TYPED SET
+//------------------------------------------------------
+
+export const TypedSetIncludeSchema: z.ZodType<Prisma.TypedSetInclude> = z.object({
+  loggedExercise: z.union([z.boolean(),z.lazy(() => LoggedExerciseArgsSchema)]).optional(),
+}).strict()
+
+export const TypedSetArgsSchema: z.ZodType<Prisma.TypedSetDefaultArgs> = z.object({
+  select: z.lazy(() => TypedSetSelectSchema).optional(),
+  include: z.lazy(() => TypedSetIncludeSchema).optional(),
+}).strict();
+
+export const TypedSetSelectSchema: z.ZodType<Prisma.TypedSetSelect> = z.object({
+  id: z.boolean().optional(),
+  type: z.boolean().optional(),
+  loggedExerciseId: z.boolean().optional(),
+  weight: z.boolean().optional(),
+  reps: z.boolean().optional(),
+  distance: z.boolean().optional(),
+  minutes: z.boolean().optional(),
+  seconds: z.boolean().optional(),
+  loggedExercise: z.union([z.boolean(),z.lazy(() => LoggedExerciseArgsSchema)]).optional(),
+}).strict()
+
+// LOG
+//------------------------------------------------------
+
+export const LogIncludeSchema: z.ZodType<Prisma.LogInclude> = z.object({
+  user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
+  exercises: z.union([z.boolean(),z.lazy(() => LoggedExerciseFindManyArgsSchema)]).optional(),
+  _count: z.union([z.boolean(),z.lazy(() => LogCountOutputTypeArgsSchema)]).optional(),
+}).strict()
+
+export const LogArgsSchema: z.ZodType<Prisma.LogDefaultArgs> = z.object({
+  select: z.lazy(() => LogSelectSchema).optional(),
+  include: z.lazy(() => LogIncludeSchema).optional(),
+}).strict();
+
+export const LogCountOutputTypeArgsSchema: z.ZodType<Prisma.LogCountOutputTypeDefaultArgs> = z.object({
+  select: z.lazy(() => LogCountOutputTypeSelectSchema).nullish(),
+}).strict();
+
+export const LogCountOutputTypeSelectSchema: z.ZodType<Prisma.LogCountOutputTypeSelect> = z.object({
+  exercises: z.boolean().optional(),
+}).strict();
+
+export const LogSelectSchema: z.ZodType<Prisma.LogSelect> = z.object({
+  id: z.boolean().optional(),
+  date: z.boolean().optional(),
+  userId: z.boolean().optional(),
+  user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
+  exercises: z.union([z.boolean(),z.lazy(() => LoggedExerciseFindManyArgsSchema)]).optional(),
+  _count: z.union([z.boolean(),z.lazy(() => LogCountOutputTypeArgsSchema)]).optional(),
+}).strict()
+
 
 /////////////////////////////////////////
 // INPUT TYPES
@@ -248,7 +389,8 @@ export const UserWhereInputSchema: z.ZodType<Prisma.UserWhereInput> = z.object({
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   accounts: z.lazy(() => AccountListRelationFilterSchema).optional(),
-  sessions: z.lazy(() => SessionListRelationFilterSchema).optional()
+  sessions: z.lazy(() => SessionListRelationFilterSchema).optional(),
+  logs: z.lazy(() => LogListRelationFilterSchema).optional()
 }).strict();
 
 export const UserOrderByWithRelationInputSchema: z.ZodType<Prisma.UserOrderByWithRelationInput> = z.object({
@@ -260,7 +402,8 @@ export const UserOrderByWithRelationInputSchema: z.ZodType<Prisma.UserOrderByWit
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
   accounts: z.lazy(() => AccountOrderByRelationAggregateInputSchema).optional(),
-  sessions: z.lazy(() => SessionOrderByRelationAggregateInputSchema).optional()
+  sessions: z.lazy(() => SessionOrderByRelationAggregateInputSchema).optional(),
+  logs: z.lazy(() => LogOrderByRelationAggregateInputSchema).optional()
 }).strict();
 
 export const UserWhereUniqueInputSchema: z.ZodType<Prisma.UserWhereUniqueInput> = z.union([
@@ -287,7 +430,8 @@ export const UserWhereUniqueInputSchema: z.ZodType<Prisma.UserWhereUniqueInput> 
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   accounts: z.lazy(() => AccountListRelationFilterSchema).optional(),
-  sessions: z.lazy(() => SessionListRelationFilterSchema).optional()
+  sessions: z.lazy(() => SessionListRelationFilterSchema).optional(),
+  logs: z.lazy(() => LogListRelationFilterSchema).optional()
 }).strict());
 
 export const UserOrderByWithAggregationInputSchema: z.ZodType<Prisma.UserOrderByWithAggregationInput> = z.object({
@@ -606,6 +750,192 @@ export const ExerciseScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.Exer
   images: z.lazy(() => StringNullableListFilterSchema).optional()
 }).strict();
 
+export const LoggedExerciseWhereInputSchema: z.ZodType<Prisma.LoggedExerciseWhereInput> = z.object({
+  AND: z.union([ z.lazy(() => LoggedExerciseWhereInputSchema),z.lazy(() => LoggedExerciseWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => LoggedExerciseWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => LoggedExerciseWhereInputSchema),z.lazy(() => LoggedExerciseWhereInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  exerciseSlug: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  logId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  log: z.union([ z.lazy(() => LogNullableRelationFilterSchema),z.lazy(() => LogWhereInputSchema) ]).optional().nullable(),
+  sets: z.lazy(() => TypedSetListRelationFilterSchema).optional()
+}).strict();
+
+export const LoggedExerciseOrderByWithRelationInputSchema: z.ZodType<Prisma.LoggedExerciseOrderByWithRelationInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  exerciseSlug: z.lazy(() => SortOrderSchema).optional(),
+  logId: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  log: z.lazy(() => LogOrderByWithRelationInputSchema).optional(),
+  sets: z.lazy(() => TypedSetOrderByRelationAggregateInputSchema).optional()
+}).strict();
+
+export const LoggedExerciseWhereUniqueInputSchema: z.ZodType<Prisma.LoggedExerciseWhereUniqueInput> = z.object({
+  id: z.string().uuid()
+})
+.and(z.object({
+  id: z.string().uuid().optional(),
+  AND: z.union([ z.lazy(() => LoggedExerciseWhereInputSchema),z.lazy(() => LoggedExerciseWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => LoggedExerciseWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => LoggedExerciseWhereInputSchema),z.lazy(() => LoggedExerciseWhereInputSchema).array() ]).optional(),
+  exerciseSlug: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  logId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  log: z.union([ z.lazy(() => LogNullableRelationFilterSchema),z.lazy(() => LogWhereInputSchema) ]).optional().nullable(),
+  sets: z.lazy(() => TypedSetListRelationFilterSchema).optional()
+}).strict());
+
+export const LoggedExerciseOrderByWithAggregationInputSchema: z.ZodType<Prisma.LoggedExerciseOrderByWithAggregationInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  exerciseSlug: z.lazy(() => SortOrderSchema).optional(),
+  logId: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  _count: z.lazy(() => LoggedExerciseCountOrderByAggregateInputSchema).optional(),
+  _max: z.lazy(() => LoggedExerciseMaxOrderByAggregateInputSchema).optional(),
+  _min: z.lazy(() => LoggedExerciseMinOrderByAggregateInputSchema).optional()
+}).strict();
+
+export const LoggedExerciseScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.LoggedExerciseScalarWhereWithAggregatesInput> = z.object({
+  AND: z.union([ z.lazy(() => LoggedExerciseScalarWhereWithAggregatesInputSchema),z.lazy(() => LoggedExerciseScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  OR: z.lazy(() => LoggedExerciseScalarWhereWithAggregatesInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => LoggedExerciseScalarWhereWithAggregatesInputSchema),z.lazy(() => LoggedExerciseScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  exerciseSlug: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  logId: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+}).strict();
+
+export const TypedSetWhereInputSchema: z.ZodType<Prisma.TypedSetWhereInput> = z.object({
+  AND: z.union([ z.lazy(() => TypedSetWhereInputSchema),z.lazy(() => TypedSetWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => TypedSetWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => TypedSetWhereInputSchema),z.lazy(() => TypedSetWhereInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  type: z.union([ z.lazy(() => EnumSetTypeFilterSchema),z.lazy(() => SetTypeSchema) ]).optional(),
+  loggedExerciseId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  weight: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
+  reps: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
+  distance: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  minutes: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
+  seconds: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
+  loggedExercise: z.union([ z.lazy(() => LoggedExerciseNullableRelationFilterSchema),z.lazy(() => LoggedExerciseWhereInputSchema) ]).optional().nullable(),
+}).strict();
+
+export const TypedSetOrderByWithRelationInputSchema: z.ZodType<Prisma.TypedSetOrderByWithRelationInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  type: z.lazy(() => SortOrderSchema).optional(),
+  loggedExerciseId: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  weight: z.lazy(() => SortOrderSchema).optional(),
+  reps: z.lazy(() => SortOrderSchema).optional(),
+  distance: z.lazy(() => SortOrderSchema).optional(),
+  minutes: z.lazy(() => SortOrderSchema).optional(),
+  seconds: z.lazy(() => SortOrderSchema).optional(),
+  loggedExercise: z.lazy(() => LoggedExerciseOrderByWithRelationInputSchema).optional()
+}).strict();
+
+export const TypedSetWhereUniqueInputSchema: z.ZodType<Prisma.TypedSetWhereUniqueInput> = z.object({
+  id: z.string().uuid()
+})
+.and(z.object({
+  id: z.string().uuid().optional(),
+  AND: z.union([ z.lazy(() => TypedSetWhereInputSchema),z.lazy(() => TypedSetWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => TypedSetWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => TypedSetWhereInputSchema),z.lazy(() => TypedSetWhereInputSchema).array() ]).optional(),
+  type: z.union([ z.lazy(() => EnumSetTypeFilterSchema),z.lazy(() => SetTypeSchema) ]).optional(),
+  loggedExerciseId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  weight: z.union([ z.lazy(() => IntFilterSchema),z.number().int() ]).optional(),
+  reps: z.union([ z.lazy(() => IntFilterSchema),z.number().int() ]).optional(),
+  distance: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  minutes: z.union([ z.lazy(() => IntFilterSchema),z.number().int() ]).optional(),
+  seconds: z.union([ z.lazy(() => IntFilterSchema),z.number().int() ]).optional(),
+  loggedExercise: z.union([ z.lazy(() => LoggedExerciseNullableRelationFilterSchema),z.lazy(() => LoggedExerciseWhereInputSchema) ]).optional().nullable(),
+}).strict());
+
+export const TypedSetOrderByWithAggregationInputSchema: z.ZodType<Prisma.TypedSetOrderByWithAggregationInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  type: z.lazy(() => SortOrderSchema).optional(),
+  loggedExerciseId: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  weight: z.lazy(() => SortOrderSchema).optional(),
+  reps: z.lazy(() => SortOrderSchema).optional(),
+  distance: z.lazy(() => SortOrderSchema).optional(),
+  minutes: z.lazy(() => SortOrderSchema).optional(),
+  seconds: z.lazy(() => SortOrderSchema).optional(),
+  _count: z.lazy(() => TypedSetCountOrderByAggregateInputSchema).optional(),
+  _avg: z.lazy(() => TypedSetAvgOrderByAggregateInputSchema).optional(),
+  _max: z.lazy(() => TypedSetMaxOrderByAggregateInputSchema).optional(),
+  _min: z.lazy(() => TypedSetMinOrderByAggregateInputSchema).optional(),
+  _sum: z.lazy(() => TypedSetSumOrderByAggregateInputSchema).optional()
+}).strict();
+
+export const TypedSetScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.TypedSetScalarWhereWithAggregatesInput> = z.object({
+  AND: z.union([ z.lazy(() => TypedSetScalarWhereWithAggregatesInputSchema),z.lazy(() => TypedSetScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  OR: z.lazy(() => TypedSetScalarWhereWithAggregatesInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => TypedSetScalarWhereWithAggregatesInputSchema),z.lazy(() => TypedSetScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  type: z.union([ z.lazy(() => EnumSetTypeWithAggregatesFilterSchema),z.lazy(() => SetTypeSchema) ]).optional(),
+  loggedExerciseId: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+  weight: z.union([ z.lazy(() => IntWithAggregatesFilterSchema),z.number() ]).optional(),
+  reps: z.union([ z.lazy(() => IntWithAggregatesFilterSchema),z.number() ]).optional(),
+  distance: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  minutes: z.union([ z.lazy(() => IntWithAggregatesFilterSchema),z.number() ]).optional(),
+  seconds: z.union([ z.lazy(() => IntWithAggregatesFilterSchema),z.number() ]).optional(),
+}).strict();
+
+export const LogWhereInputSchema: z.ZodType<Prisma.LogWhereInput> = z.object({
+  AND: z.union([ z.lazy(() => LogWhereInputSchema),z.lazy(() => LogWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => LogWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => LogWhereInputSchema),z.lazy(() => LogWhereInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  date: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  userId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  user: z.union([ z.lazy(() => UserRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
+  exercises: z.lazy(() => LoggedExerciseListRelationFilterSchema).optional()
+}).strict();
+
+export const LogOrderByWithRelationInputSchema: z.ZodType<Prisma.LogOrderByWithRelationInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  date: z.lazy(() => SortOrderSchema).optional(),
+  userId: z.lazy(() => SortOrderSchema).optional(),
+  user: z.lazy(() => UserOrderByWithRelationInputSchema).optional(),
+  exercises: z.lazy(() => LoggedExerciseOrderByRelationAggregateInputSchema).optional()
+}).strict();
+
+export const LogWhereUniqueInputSchema: z.ZodType<Prisma.LogWhereUniqueInput> = z.union([
+  z.object({
+    id: z.string().uuid(),
+    date: z.string()
+  }),
+  z.object({
+    id: z.string().uuid(),
+  }),
+  z.object({
+    date: z.string(),
+  }),
+])
+.and(z.object({
+  id: z.string().uuid().optional(),
+  date: z.string().optional(),
+  AND: z.union([ z.lazy(() => LogWhereInputSchema),z.lazy(() => LogWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => LogWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => LogWhereInputSchema),z.lazy(() => LogWhereInputSchema).array() ]).optional(),
+  userId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  user: z.union([ z.lazy(() => UserRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
+  exercises: z.lazy(() => LoggedExerciseListRelationFilterSchema).optional()
+}).strict());
+
+export const LogOrderByWithAggregationInputSchema: z.ZodType<Prisma.LogOrderByWithAggregationInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  date: z.lazy(() => SortOrderSchema).optional(),
+  userId: z.lazy(() => SortOrderSchema).optional(),
+  _count: z.lazy(() => LogCountOrderByAggregateInputSchema).optional(),
+  _max: z.lazy(() => LogMaxOrderByAggregateInputSchema).optional(),
+  _min: z.lazy(() => LogMinOrderByAggregateInputSchema).optional()
+}).strict();
+
+export const LogScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.LogScalarWhereWithAggregatesInput> = z.object({
+  AND: z.union([ z.lazy(() => LogScalarWhereWithAggregatesInputSchema),z.lazy(() => LogScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  OR: z.lazy(() => LogScalarWhereWithAggregatesInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => LogScalarWhereWithAggregatesInputSchema),z.lazy(() => LogScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  date: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  userId: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+}).strict();
+
 export const UserCreateInputSchema: z.ZodType<Prisma.UserCreateInput> = z.object({
   id: z.string().cuid().optional(),
   name: z.string().optional().nullable(),
@@ -615,7 +945,8 @@ export const UserCreateInputSchema: z.ZodType<Prisma.UserCreateInput> = z.object
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   accounts: z.lazy(() => AccountCreateNestedManyWithoutUserInputSchema).optional(),
-  sessions: z.lazy(() => SessionCreateNestedManyWithoutUserInputSchema).optional()
+  sessions: z.lazy(() => SessionCreateNestedManyWithoutUserInputSchema).optional(),
+  logs: z.lazy(() => LogCreateNestedManyWithoutUserInputSchema).optional()
 }).strict();
 
 export const UserUncheckedCreateInputSchema: z.ZodType<Prisma.UserUncheckedCreateInput> = z.object({
@@ -627,7 +958,8 @@ export const UserUncheckedCreateInputSchema: z.ZodType<Prisma.UserUncheckedCreat
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   accounts: z.lazy(() => AccountUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
-  sessions: z.lazy(() => SessionUncheckedCreateNestedManyWithoutUserInputSchema).optional()
+  sessions: z.lazy(() => SessionUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
+  logs: z.lazy(() => LogUncheckedCreateNestedManyWithoutUserInputSchema).optional()
 }).strict();
 
 export const UserUpdateInputSchema: z.ZodType<Prisma.UserUpdateInput> = z.object({
@@ -639,7 +971,8 @@ export const UserUpdateInputSchema: z.ZodType<Prisma.UserUpdateInput> = z.object
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   accounts: z.lazy(() => AccountUpdateManyWithoutUserNestedInputSchema).optional(),
-  sessions: z.lazy(() => SessionUpdateManyWithoutUserNestedInputSchema).optional()
+  sessions: z.lazy(() => SessionUpdateManyWithoutUserNestedInputSchema).optional(),
+  logs: z.lazy(() => LogUpdateManyWithoutUserNestedInputSchema).optional()
 }).strict();
 
 export const UserUncheckedUpdateInputSchema: z.ZodType<Prisma.UserUncheckedUpdateInput> = z.object({
@@ -651,7 +984,8 @@ export const UserUncheckedUpdateInputSchema: z.ZodType<Prisma.UserUncheckedUpdat
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   accounts: z.lazy(() => AccountUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
-  sessions: z.lazy(() => SessionUncheckedUpdateManyWithoutUserNestedInputSchema).optional()
+  sessions: z.lazy(() => SessionUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
+  logs: z.lazy(() => LogUncheckedUpdateManyWithoutUserNestedInputSchema).optional()
 }).strict();
 
 export const UserCreateManyInputSchema: z.ZodType<Prisma.UserCreateManyInput> = z.object({
@@ -990,6 +1324,172 @@ export const ExerciseUncheckedUpdateManyInputSchema: z.ZodType<Prisma.ExerciseUn
   images: z.union([ z.lazy(() => ExerciseUpdateimagesInputSchema),z.string().array() ]).optional(),
 }).strict();
 
+export const LoggedExerciseCreateInputSchema: z.ZodType<Prisma.LoggedExerciseCreateInput> = z.object({
+  id: z.string().uuid().optional(),
+  exerciseSlug: z.string(),
+  log: z.lazy(() => LogCreateNestedOneWithoutExercisesInputSchema).optional(),
+  sets: z.lazy(() => TypedSetCreateNestedManyWithoutLoggedExerciseInputSchema).optional()
+}).strict();
+
+export const LoggedExerciseUncheckedCreateInputSchema: z.ZodType<Prisma.LoggedExerciseUncheckedCreateInput> = z.object({
+  id: z.string().uuid().optional(),
+  exerciseSlug: z.string(),
+  logId: z.string().optional().nullable(),
+  sets: z.lazy(() => TypedSetUncheckedCreateNestedManyWithoutLoggedExerciseInputSchema).optional()
+}).strict();
+
+export const LoggedExerciseUpdateInputSchema: z.ZodType<Prisma.LoggedExerciseUpdateInput> = z.object({
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  exerciseSlug: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  log: z.lazy(() => LogUpdateOneWithoutExercisesNestedInputSchema).optional(),
+  sets: z.lazy(() => TypedSetUpdateManyWithoutLoggedExerciseNestedInputSchema).optional()
+}).strict();
+
+export const LoggedExerciseUncheckedUpdateInputSchema: z.ZodType<Prisma.LoggedExerciseUncheckedUpdateInput> = z.object({
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  exerciseSlug: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  logId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  sets: z.lazy(() => TypedSetUncheckedUpdateManyWithoutLoggedExerciseNestedInputSchema).optional()
+}).strict();
+
+export const LoggedExerciseCreateManyInputSchema: z.ZodType<Prisma.LoggedExerciseCreateManyInput> = z.object({
+  id: z.string().uuid().optional(),
+  exerciseSlug: z.string(),
+  logId: z.string().optional().nullable()
+}).strict();
+
+export const LoggedExerciseUpdateManyMutationInputSchema: z.ZodType<Prisma.LoggedExerciseUpdateManyMutationInput> = z.object({
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  exerciseSlug: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const LoggedExerciseUncheckedUpdateManyInputSchema: z.ZodType<Prisma.LoggedExerciseUncheckedUpdateManyInput> = z.object({
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  exerciseSlug: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  logId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+}).strict();
+
+export const TypedSetCreateInputSchema: z.ZodType<Prisma.TypedSetCreateInput> = z.object({
+  id: z.string().uuid().optional(),
+  type: z.lazy(() => SetTypeSchema).optional(),
+  weight: z.number().int(),
+  reps: z.number().int(),
+  distance: z.string(),
+  minutes: z.number().int(),
+  seconds: z.number().int(),
+  loggedExercise: z.lazy(() => LoggedExerciseCreateNestedOneWithoutSetsInputSchema).optional()
+}).strict();
+
+export const TypedSetUncheckedCreateInputSchema: z.ZodType<Prisma.TypedSetUncheckedCreateInput> = z.object({
+  id: z.string().uuid().optional(),
+  type: z.lazy(() => SetTypeSchema).optional(),
+  loggedExerciseId: z.string().optional().nullable(),
+  weight: z.number().int(),
+  reps: z.number().int(),
+  distance: z.string(),
+  minutes: z.number().int(),
+  seconds: z.number().int()
+}).strict();
+
+export const TypedSetUpdateInputSchema: z.ZodType<Prisma.TypedSetUpdateInput> = z.object({
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  type: z.union([ z.lazy(() => SetTypeSchema),z.lazy(() => EnumSetTypeFieldUpdateOperationsInputSchema) ]).optional(),
+  weight: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  reps: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  distance: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  minutes: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  seconds: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  loggedExercise: z.lazy(() => LoggedExerciseUpdateOneWithoutSetsNestedInputSchema).optional()
+}).strict();
+
+export const TypedSetUncheckedUpdateInputSchema: z.ZodType<Prisma.TypedSetUncheckedUpdateInput> = z.object({
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  type: z.union([ z.lazy(() => SetTypeSchema),z.lazy(() => EnumSetTypeFieldUpdateOperationsInputSchema) ]).optional(),
+  loggedExerciseId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  weight: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  reps: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  distance: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  minutes: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  seconds: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const TypedSetCreateManyInputSchema: z.ZodType<Prisma.TypedSetCreateManyInput> = z.object({
+  id: z.string().uuid().optional(),
+  type: z.lazy(() => SetTypeSchema).optional(),
+  loggedExerciseId: z.string().optional().nullable(),
+  weight: z.number().int(),
+  reps: z.number().int(),
+  distance: z.string(),
+  minutes: z.number().int(),
+  seconds: z.number().int()
+}).strict();
+
+export const TypedSetUpdateManyMutationInputSchema: z.ZodType<Prisma.TypedSetUpdateManyMutationInput> = z.object({
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  type: z.union([ z.lazy(() => SetTypeSchema),z.lazy(() => EnumSetTypeFieldUpdateOperationsInputSchema) ]).optional(),
+  weight: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  reps: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  distance: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  minutes: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  seconds: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const TypedSetUncheckedUpdateManyInputSchema: z.ZodType<Prisma.TypedSetUncheckedUpdateManyInput> = z.object({
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  type: z.union([ z.lazy(() => SetTypeSchema),z.lazy(() => EnumSetTypeFieldUpdateOperationsInputSchema) ]).optional(),
+  loggedExerciseId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  weight: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  reps: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  distance: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  minutes: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  seconds: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const LogCreateInputSchema: z.ZodType<Prisma.LogCreateInput> = z.object({
+  id: z.string().uuid().optional(),
+  date: z.string(),
+  user: z.lazy(() => UserCreateNestedOneWithoutLogsInputSchema),
+  exercises: z.lazy(() => LoggedExerciseCreateNestedManyWithoutLogInputSchema).optional()
+}).strict();
+
+export const LogUncheckedCreateInputSchema: z.ZodType<Prisma.LogUncheckedCreateInput> = z.object({
+  id: z.string().uuid().optional(),
+  date: z.string(),
+  userId: z.string(),
+  exercises: z.lazy(() => LoggedExerciseUncheckedCreateNestedManyWithoutLogInputSchema).optional()
+}).strict();
+
+export const LogUpdateInputSchema: z.ZodType<Prisma.LogUpdateInput> = z.object({
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  date: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  user: z.lazy(() => UserUpdateOneRequiredWithoutLogsNestedInputSchema).optional(),
+  exercises: z.lazy(() => LoggedExerciseUpdateManyWithoutLogNestedInputSchema).optional()
+}).strict();
+
+export const LogUncheckedUpdateInputSchema: z.ZodType<Prisma.LogUncheckedUpdateInput> = z.object({
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  date: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  exercises: z.lazy(() => LoggedExerciseUncheckedUpdateManyWithoutLogNestedInputSchema).optional()
+}).strict();
+
+export const LogCreateManyInputSchema: z.ZodType<Prisma.LogCreateManyInput> = z.object({
+  id: z.string().uuid().optional(),
+  date: z.string(),
+  userId: z.string()
+}).strict();
+
+export const LogUpdateManyMutationInputSchema: z.ZodType<Prisma.LogUpdateManyMutationInput> = z.object({
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  date: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const LogUncheckedUpdateManyInputSchema: z.ZodType<Prisma.LogUncheckedUpdateManyInput> = z.object({
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  date: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
 export const StringFilterSchema: z.ZodType<Prisma.StringFilter> = z.object({
   equals: z.string().optional(),
   in: z.string().array().optional(),
@@ -1054,6 +1554,12 @@ export const SessionListRelationFilterSchema: z.ZodType<Prisma.SessionListRelati
   none: z.lazy(() => SessionWhereInputSchema).optional()
 }).strict();
 
+export const LogListRelationFilterSchema: z.ZodType<Prisma.LogListRelationFilter> = z.object({
+  every: z.lazy(() => LogWhereInputSchema).optional(),
+  some: z.lazy(() => LogWhereInputSchema).optional(),
+  none: z.lazy(() => LogWhereInputSchema).optional()
+}).strict();
+
 export const SortOrderInputSchema: z.ZodType<Prisma.SortOrderInput> = z.object({
   sort: z.lazy(() => SortOrderSchema),
   nulls: z.lazy(() => NullsOrderSchema).optional()
@@ -1064,6 +1570,10 @@ export const AccountOrderByRelationAggregateInputSchema: z.ZodType<Prisma.Accoun
 }).strict();
 
 export const SessionOrderByRelationAggregateInputSchema: z.ZodType<Prisma.SessionOrderByRelationAggregateInput> = z.object({
+  _count: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const LogOrderByRelationAggregateInputSchema: z.ZodType<Prisma.LogOrderByRelationAggregateInput> = z.object({
   _count: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
@@ -1343,6 +1853,163 @@ export const ExerciseMinOrderByAggregateInputSchema: z.ZodType<Prisma.ExerciseMi
   category: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
+export const LogNullableRelationFilterSchema: z.ZodType<Prisma.LogNullableRelationFilter> = z.object({
+  is: z.lazy(() => LogWhereInputSchema).optional().nullable(),
+  isNot: z.lazy(() => LogWhereInputSchema).optional().nullable()
+}).strict();
+
+export const TypedSetListRelationFilterSchema: z.ZodType<Prisma.TypedSetListRelationFilter> = z.object({
+  every: z.lazy(() => TypedSetWhereInputSchema).optional(),
+  some: z.lazy(() => TypedSetWhereInputSchema).optional(),
+  none: z.lazy(() => TypedSetWhereInputSchema).optional()
+}).strict();
+
+export const TypedSetOrderByRelationAggregateInputSchema: z.ZodType<Prisma.TypedSetOrderByRelationAggregateInput> = z.object({
+  _count: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const LoggedExerciseCountOrderByAggregateInputSchema: z.ZodType<Prisma.LoggedExerciseCountOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  exerciseSlug: z.lazy(() => SortOrderSchema).optional(),
+  logId: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const LoggedExerciseMaxOrderByAggregateInputSchema: z.ZodType<Prisma.LoggedExerciseMaxOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  exerciseSlug: z.lazy(() => SortOrderSchema).optional(),
+  logId: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const LoggedExerciseMinOrderByAggregateInputSchema: z.ZodType<Prisma.LoggedExerciseMinOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  exerciseSlug: z.lazy(() => SortOrderSchema).optional(),
+  logId: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const EnumSetTypeFilterSchema: z.ZodType<Prisma.EnumSetTypeFilter> = z.object({
+  equals: z.lazy(() => SetTypeSchema).optional(),
+  in: z.lazy(() => SetTypeSchema).array().optional(),
+  notIn: z.lazy(() => SetTypeSchema).array().optional(),
+  not: z.union([ z.lazy(() => SetTypeSchema),z.lazy(() => NestedEnumSetTypeFilterSchema) ]).optional(),
+}).strict();
+
+export const IntFilterSchema: z.ZodType<Prisma.IntFilter> = z.object({
+  equals: z.number().optional(),
+  in: z.number().array().optional(),
+  notIn: z.number().array().optional(),
+  lt: z.number().optional(),
+  lte: z.number().optional(),
+  gt: z.number().optional(),
+  gte: z.number().optional(),
+  not: z.union([ z.number(),z.lazy(() => NestedIntFilterSchema) ]).optional(),
+}).strict();
+
+export const LoggedExerciseNullableRelationFilterSchema: z.ZodType<Prisma.LoggedExerciseNullableRelationFilter> = z.object({
+  is: z.lazy(() => LoggedExerciseWhereInputSchema).optional().nullable(),
+  isNot: z.lazy(() => LoggedExerciseWhereInputSchema).optional().nullable()
+}).strict();
+
+export const TypedSetCountOrderByAggregateInputSchema: z.ZodType<Prisma.TypedSetCountOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  type: z.lazy(() => SortOrderSchema).optional(),
+  loggedExerciseId: z.lazy(() => SortOrderSchema).optional(),
+  weight: z.lazy(() => SortOrderSchema).optional(),
+  reps: z.lazy(() => SortOrderSchema).optional(),
+  distance: z.lazy(() => SortOrderSchema).optional(),
+  minutes: z.lazy(() => SortOrderSchema).optional(),
+  seconds: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const TypedSetAvgOrderByAggregateInputSchema: z.ZodType<Prisma.TypedSetAvgOrderByAggregateInput> = z.object({
+  weight: z.lazy(() => SortOrderSchema).optional(),
+  reps: z.lazy(() => SortOrderSchema).optional(),
+  minutes: z.lazy(() => SortOrderSchema).optional(),
+  seconds: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const TypedSetMaxOrderByAggregateInputSchema: z.ZodType<Prisma.TypedSetMaxOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  type: z.lazy(() => SortOrderSchema).optional(),
+  loggedExerciseId: z.lazy(() => SortOrderSchema).optional(),
+  weight: z.lazy(() => SortOrderSchema).optional(),
+  reps: z.lazy(() => SortOrderSchema).optional(),
+  distance: z.lazy(() => SortOrderSchema).optional(),
+  minutes: z.lazy(() => SortOrderSchema).optional(),
+  seconds: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const TypedSetMinOrderByAggregateInputSchema: z.ZodType<Prisma.TypedSetMinOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  type: z.lazy(() => SortOrderSchema).optional(),
+  loggedExerciseId: z.lazy(() => SortOrderSchema).optional(),
+  weight: z.lazy(() => SortOrderSchema).optional(),
+  reps: z.lazy(() => SortOrderSchema).optional(),
+  distance: z.lazy(() => SortOrderSchema).optional(),
+  minutes: z.lazy(() => SortOrderSchema).optional(),
+  seconds: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const TypedSetSumOrderByAggregateInputSchema: z.ZodType<Prisma.TypedSetSumOrderByAggregateInput> = z.object({
+  weight: z.lazy(() => SortOrderSchema).optional(),
+  reps: z.lazy(() => SortOrderSchema).optional(),
+  minutes: z.lazy(() => SortOrderSchema).optional(),
+  seconds: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const EnumSetTypeWithAggregatesFilterSchema: z.ZodType<Prisma.EnumSetTypeWithAggregatesFilter> = z.object({
+  equals: z.lazy(() => SetTypeSchema).optional(),
+  in: z.lazy(() => SetTypeSchema).array().optional(),
+  notIn: z.lazy(() => SetTypeSchema).array().optional(),
+  not: z.union([ z.lazy(() => SetTypeSchema),z.lazy(() => NestedEnumSetTypeWithAggregatesFilterSchema) ]).optional(),
+  _count: z.lazy(() => NestedIntFilterSchema).optional(),
+  _min: z.lazy(() => NestedEnumSetTypeFilterSchema).optional(),
+  _max: z.lazy(() => NestedEnumSetTypeFilterSchema).optional()
+}).strict();
+
+export const IntWithAggregatesFilterSchema: z.ZodType<Prisma.IntWithAggregatesFilter> = z.object({
+  equals: z.number().optional(),
+  in: z.number().array().optional(),
+  notIn: z.number().array().optional(),
+  lt: z.number().optional(),
+  lte: z.number().optional(),
+  gt: z.number().optional(),
+  gte: z.number().optional(),
+  not: z.union([ z.number(),z.lazy(() => NestedIntWithAggregatesFilterSchema) ]).optional(),
+  _count: z.lazy(() => NestedIntFilterSchema).optional(),
+  _avg: z.lazy(() => NestedFloatFilterSchema).optional(),
+  _sum: z.lazy(() => NestedIntFilterSchema).optional(),
+  _min: z.lazy(() => NestedIntFilterSchema).optional(),
+  _max: z.lazy(() => NestedIntFilterSchema).optional()
+}).strict();
+
+export const LoggedExerciseListRelationFilterSchema: z.ZodType<Prisma.LoggedExerciseListRelationFilter> = z.object({
+  every: z.lazy(() => LoggedExerciseWhereInputSchema).optional(),
+  some: z.lazy(() => LoggedExerciseWhereInputSchema).optional(),
+  none: z.lazy(() => LoggedExerciseWhereInputSchema).optional()
+}).strict();
+
+export const LoggedExerciseOrderByRelationAggregateInputSchema: z.ZodType<Prisma.LoggedExerciseOrderByRelationAggregateInput> = z.object({
+  _count: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const LogCountOrderByAggregateInputSchema: z.ZodType<Prisma.LogCountOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  date: z.lazy(() => SortOrderSchema).optional(),
+  userId: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const LogMaxOrderByAggregateInputSchema: z.ZodType<Prisma.LogMaxOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  date: z.lazy(() => SortOrderSchema).optional(),
+  userId: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const LogMinOrderByAggregateInputSchema: z.ZodType<Prisma.LogMinOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  date: z.lazy(() => SortOrderSchema).optional(),
+  userId: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
 export const AccountCreateNestedManyWithoutUserInputSchema: z.ZodType<Prisma.AccountCreateNestedManyWithoutUserInput> = z.object({
   create: z.union([ z.lazy(() => AccountCreateWithoutUserInputSchema),z.lazy(() => AccountCreateWithoutUserInputSchema).array(),z.lazy(() => AccountUncheckedCreateWithoutUserInputSchema),z.lazy(() => AccountUncheckedCreateWithoutUserInputSchema).array() ]).optional(),
   connectOrCreate: z.union([ z.lazy(() => AccountCreateOrConnectWithoutUserInputSchema),z.lazy(() => AccountCreateOrConnectWithoutUserInputSchema).array() ]).optional(),
@@ -1357,6 +2024,13 @@ export const SessionCreateNestedManyWithoutUserInputSchema: z.ZodType<Prisma.Ses
   connect: z.union([ z.lazy(() => SessionWhereUniqueInputSchema),z.lazy(() => SessionWhereUniqueInputSchema).array() ]).optional(),
 }).strict();
 
+export const LogCreateNestedManyWithoutUserInputSchema: z.ZodType<Prisma.LogCreateNestedManyWithoutUserInput> = z.object({
+  create: z.union([ z.lazy(() => LogCreateWithoutUserInputSchema),z.lazy(() => LogCreateWithoutUserInputSchema).array(),z.lazy(() => LogUncheckedCreateWithoutUserInputSchema),z.lazy(() => LogUncheckedCreateWithoutUserInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => LogCreateOrConnectWithoutUserInputSchema),z.lazy(() => LogCreateOrConnectWithoutUserInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => LogCreateManyUserInputEnvelopeSchema).optional(),
+  connect: z.union([ z.lazy(() => LogWhereUniqueInputSchema),z.lazy(() => LogWhereUniqueInputSchema).array() ]).optional(),
+}).strict();
+
 export const AccountUncheckedCreateNestedManyWithoutUserInputSchema: z.ZodType<Prisma.AccountUncheckedCreateNestedManyWithoutUserInput> = z.object({
   create: z.union([ z.lazy(() => AccountCreateWithoutUserInputSchema),z.lazy(() => AccountCreateWithoutUserInputSchema).array(),z.lazy(() => AccountUncheckedCreateWithoutUserInputSchema),z.lazy(() => AccountUncheckedCreateWithoutUserInputSchema).array() ]).optional(),
   connectOrCreate: z.union([ z.lazy(() => AccountCreateOrConnectWithoutUserInputSchema),z.lazy(() => AccountCreateOrConnectWithoutUserInputSchema).array() ]).optional(),
@@ -1369,6 +2043,13 @@ export const SessionUncheckedCreateNestedManyWithoutUserInputSchema: z.ZodType<P
   connectOrCreate: z.union([ z.lazy(() => SessionCreateOrConnectWithoutUserInputSchema),z.lazy(() => SessionCreateOrConnectWithoutUserInputSchema).array() ]).optional(),
   createMany: z.lazy(() => SessionCreateManyUserInputEnvelopeSchema).optional(),
   connect: z.union([ z.lazy(() => SessionWhereUniqueInputSchema),z.lazy(() => SessionWhereUniqueInputSchema).array() ]).optional(),
+}).strict();
+
+export const LogUncheckedCreateNestedManyWithoutUserInputSchema: z.ZodType<Prisma.LogUncheckedCreateNestedManyWithoutUserInput> = z.object({
+  create: z.union([ z.lazy(() => LogCreateWithoutUserInputSchema),z.lazy(() => LogCreateWithoutUserInputSchema).array(),z.lazy(() => LogUncheckedCreateWithoutUserInputSchema),z.lazy(() => LogUncheckedCreateWithoutUserInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => LogCreateOrConnectWithoutUserInputSchema),z.lazy(() => LogCreateOrConnectWithoutUserInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => LogCreateManyUserInputEnvelopeSchema).optional(),
+  connect: z.union([ z.lazy(() => LogWhereUniqueInputSchema),z.lazy(() => LogWhereUniqueInputSchema).array() ]).optional(),
 }).strict();
 
 export const StringFieldUpdateOperationsInputSchema: z.ZodType<Prisma.StringFieldUpdateOperationsInput> = z.object({
@@ -1415,6 +2096,20 @@ export const SessionUpdateManyWithoutUserNestedInputSchema: z.ZodType<Prisma.Ses
   deleteMany: z.union([ z.lazy(() => SessionScalarWhereInputSchema),z.lazy(() => SessionScalarWhereInputSchema).array() ]).optional(),
 }).strict();
 
+export const LogUpdateManyWithoutUserNestedInputSchema: z.ZodType<Prisma.LogUpdateManyWithoutUserNestedInput> = z.object({
+  create: z.union([ z.lazy(() => LogCreateWithoutUserInputSchema),z.lazy(() => LogCreateWithoutUserInputSchema).array(),z.lazy(() => LogUncheckedCreateWithoutUserInputSchema),z.lazy(() => LogUncheckedCreateWithoutUserInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => LogCreateOrConnectWithoutUserInputSchema),z.lazy(() => LogCreateOrConnectWithoutUserInputSchema).array() ]).optional(),
+  upsert: z.union([ z.lazy(() => LogUpsertWithWhereUniqueWithoutUserInputSchema),z.lazy(() => LogUpsertWithWhereUniqueWithoutUserInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => LogCreateManyUserInputEnvelopeSchema).optional(),
+  set: z.union([ z.lazy(() => LogWhereUniqueInputSchema),z.lazy(() => LogWhereUniqueInputSchema).array() ]).optional(),
+  disconnect: z.union([ z.lazy(() => LogWhereUniqueInputSchema),z.lazy(() => LogWhereUniqueInputSchema).array() ]).optional(),
+  delete: z.union([ z.lazy(() => LogWhereUniqueInputSchema),z.lazy(() => LogWhereUniqueInputSchema).array() ]).optional(),
+  connect: z.union([ z.lazy(() => LogWhereUniqueInputSchema),z.lazy(() => LogWhereUniqueInputSchema).array() ]).optional(),
+  update: z.union([ z.lazy(() => LogUpdateWithWhereUniqueWithoutUserInputSchema),z.lazy(() => LogUpdateWithWhereUniqueWithoutUserInputSchema).array() ]).optional(),
+  updateMany: z.union([ z.lazy(() => LogUpdateManyWithWhereWithoutUserInputSchema),z.lazy(() => LogUpdateManyWithWhereWithoutUserInputSchema).array() ]).optional(),
+  deleteMany: z.union([ z.lazy(() => LogScalarWhereInputSchema),z.lazy(() => LogScalarWhereInputSchema).array() ]).optional(),
+}).strict();
+
 export const AccountUncheckedUpdateManyWithoutUserNestedInputSchema: z.ZodType<Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput> = z.object({
   create: z.union([ z.lazy(() => AccountCreateWithoutUserInputSchema),z.lazy(() => AccountCreateWithoutUserInputSchema).array(),z.lazy(() => AccountUncheckedCreateWithoutUserInputSchema),z.lazy(() => AccountUncheckedCreateWithoutUserInputSchema).array() ]).optional(),
   connectOrCreate: z.union([ z.lazy(() => AccountCreateOrConnectWithoutUserInputSchema),z.lazy(() => AccountCreateOrConnectWithoutUserInputSchema).array() ]).optional(),
@@ -1441,6 +2136,20 @@ export const SessionUncheckedUpdateManyWithoutUserNestedInputSchema: z.ZodType<P
   update: z.union([ z.lazy(() => SessionUpdateWithWhereUniqueWithoutUserInputSchema),z.lazy(() => SessionUpdateWithWhereUniqueWithoutUserInputSchema).array() ]).optional(),
   updateMany: z.union([ z.lazy(() => SessionUpdateManyWithWhereWithoutUserInputSchema),z.lazy(() => SessionUpdateManyWithWhereWithoutUserInputSchema).array() ]).optional(),
   deleteMany: z.union([ z.lazy(() => SessionScalarWhereInputSchema),z.lazy(() => SessionScalarWhereInputSchema).array() ]).optional(),
+}).strict();
+
+export const LogUncheckedUpdateManyWithoutUserNestedInputSchema: z.ZodType<Prisma.LogUncheckedUpdateManyWithoutUserNestedInput> = z.object({
+  create: z.union([ z.lazy(() => LogCreateWithoutUserInputSchema),z.lazy(() => LogCreateWithoutUserInputSchema).array(),z.lazy(() => LogUncheckedCreateWithoutUserInputSchema),z.lazy(() => LogUncheckedCreateWithoutUserInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => LogCreateOrConnectWithoutUserInputSchema),z.lazy(() => LogCreateOrConnectWithoutUserInputSchema).array() ]).optional(),
+  upsert: z.union([ z.lazy(() => LogUpsertWithWhereUniqueWithoutUserInputSchema),z.lazy(() => LogUpsertWithWhereUniqueWithoutUserInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => LogCreateManyUserInputEnvelopeSchema).optional(),
+  set: z.union([ z.lazy(() => LogWhereUniqueInputSchema),z.lazy(() => LogWhereUniqueInputSchema).array() ]).optional(),
+  disconnect: z.union([ z.lazy(() => LogWhereUniqueInputSchema),z.lazy(() => LogWhereUniqueInputSchema).array() ]).optional(),
+  delete: z.union([ z.lazy(() => LogWhereUniqueInputSchema),z.lazy(() => LogWhereUniqueInputSchema).array() ]).optional(),
+  connect: z.union([ z.lazy(() => LogWhereUniqueInputSchema),z.lazy(() => LogWhereUniqueInputSchema).array() ]).optional(),
+  update: z.union([ z.lazy(() => LogUpdateWithWhereUniqueWithoutUserInputSchema),z.lazy(() => LogUpdateWithWhereUniqueWithoutUserInputSchema).array() ]).optional(),
+  updateMany: z.union([ z.lazy(() => LogUpdateManyWithWhereWithoutUserInputSchema),z.lazy(() => LogUpdateManyWithWhereWithoutUserInputSchema).array() ]).optional(),
+  deleteMany: z.union([ z.lazy(() => LogScalarWhereInputSchema),z.lazy(() => LogScalarWhereInputSchema).array() ]).optional(),
 }).strict();
 
 export const UserCreateNestedOneWithoutAccountsInputSchema: z.ZodType<Prisma.UserCreateNestedOneWithoutAccountsInput> = z.object({
@@ -1513,6 +2222,148 @@ export const ExerciseUpdateinstructionsInputSchema: z.ZodType<Prisma.ExerciseUpd
 export const ExerciseUpdateimagesInputSchema: z.ZodType<Prisma.ExerciseUpdateimagesInput> = z.object({
   set: z.string().array().optional(),
   push: z.union([ z.string(),z.string().array() ]).optional(),
+}).strict();
+
+export const LogCreateNestedOneWithoutExercisesInputSchema: z.ZodType<Prisma.LogCreateNestedOneWithoutExercisesInput> = z.object({
+  create: z.union([ z.lazy(() => LogCreateWithoutExercisesInputSchema),z.lazy(() => LogUncheckedCreateWithoutExercisesInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => LogCreateOrConnectWithoutExercisesInputSchema).optional(),
+  connect: z.lazy(() => LogWhereUniqueInputSchema).optional()
+}).strict();
+
+export const TypedSetCreateNestedManyWithoutLoggedExerciseInputSchema: z.ZodType<Prisma.TypedSetCreateNestedManyWithoutLoggedExerciseInput> = z.object({
+  create: z.union([ z.lazy(() => TypedSetCreateWithoutLoggedExerciseInputSchema),z.lazy(() => TypedSetCreateWithoutLoggedExerciseInputSchema).array(),z.lazy(() => TypedSetUncheckedCreateWithoutLoggedExerciseInputSchema),z.lazy(() => TypedSetUncheckedCreateWithoutLoggedExerciseInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => TypedSetCreateOrConnectWithoutLoggedExerciseInputSchema),z.lazy(() => TypedSetCreateOrConnectWithoutLoggedExerciseInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => TypedSetCreateManyLoggedExerciseInputEnvelopeSchema).optional(),
+  connect: z.union([ z.lazy(() => TypedSetWhereUniqueInputSchema),z.lazy(() => TypedSetWhereUniqueInputSchema).array() ]).optional(),
+}).strict();
+
+export const TypedSetUncheckedCreateNestedManyWithoutLoggedExerciseInputSchema: z.ZodType<Prisma.TypedSetUncheckedCreateNestedManyWithoutLoggedExerciseInput> = z.object({
+  create: z.union([ z.lazy(() => TypedSetCreateWithoutLoggedExerciseInputSchema),z.lazy(() => TypedSetCreateWithoutLoggedExerciseInputSchema).array(),z.lazy(() => TypedSetUncheckedCreateWithoutLoggedExerciseInputSchema),z.lazy(() => TypedSetUncheckedCreateWithoutLoggedExerciseInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => TypedSetCreateOrConnectWithoutLoggedExerciseInputSchema),z.lazy(() => TypedSetCreateOrConnectWithoutLoggedExerciseInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => TypedSetCreateManyLoggedExerciseInputEnvelopeSchema).optional(),
+  connect: z.union([ z.lazy(() => TypedSetWhereUniqueInputSchema),z.lazy(() => TypedSetWhereUniqueInputSchema).array() ]).optional(),
+}).strict();
+
+export const LogUpdateOneWithoutExercisesNestedInputSchema: z.ZodType<Prisma.LogUpdateOneWithoutExercisesNestedInput> = z.object({
+  create: z.union([ z.lazy(() => LogCreateWithoutExercisesInputSchema),z.lazy(() => LogUncheckedCreateWithoutExercisesInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => LogCreateOrConnectWithoutExercisesInputSchema).optional(),
+  upsert: z.lazy(() => LogUpsertWithoutExercisesInputSchema).optional(),
+  disconnect: z.union([ z.boolean(),z.lazy(() => LogWhereInputSchema) ]).optional(),
+  delete: z.union([ z.boolean(),z.lazy(() => LogWhereInputSchema) ]).optional(),
+  connect: z.lazy(() => LogWhereUniqueInputSchema).optional(),
+  update: z.union([ z.lazy(() => LogUpdateToOneWithWhereWithoutExercisesInputSchema),z.lazy(() => LogUpdateWithoutExercisesInputSchema),z.lazy(() => LogUncheckedUpdateWithoutExercisesInputSchema) ]).optional(),
+}).strict();
+
+export const TypedSetUpdateManyWithoutLoggedExerciseNestedInputSchema: z.ZodType<Prisma.TypedSetUpdateManyWithoutLoggedExerciseNestedInput> = z.object({
+  create: z.union([ z.lazy(() => TypedSetCreateWithoutLoggedExerciseInputSchema),z.lazy(() => TypedSetCreateWithoutLoggedExerciseInputSchema).array(),z.lazy(() => TypedSetUncheckedCreateWithoutLoggedExerciseInputSchema),z.lazy(() => TypedSetUncheckedCreateWithoutLoggedExerciseInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => TypedSetCreateOrConnectWithoutLoggedExerciseInputSchema),z.lazy(() => TypedSetCreateOrConnectWithoutLoggedExerciseInputSchema).array() ]).optional(),
+  upsert: z.union([ z.lazy(() => TypedSetUpsertWithWhereUniqueWithoutLoggedExerciseInputSchema),z.lazy(() => TypedSetUpsertWithWhereUniqueWithoutLoggedExerciseInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => TypedSetCreateManyLoggedExerciseInputEnvelopeSchema).optional(),
+  set: z.union([ z.lazy(() => TypedSetWhereUniqueInputSchema),z.lazy(() => TypedSetWhereUniqueInputSchema).array() ]).optional(),
+  disconnect: z.union([ z.lazy(() => TypedSetWhereUniqueInputSchema),z.lazy(() => TypedSetWhereUniqueInputSchema).array() ]).optional(),
+  delete: z.union([ z.lazy(() => TypedSetWhereUniqueInputSchema),z.lazy(() => TypedSetWhereUniqueInputSchema).array() ]).optional(),
+  connect: z.union([ z.lazy(() => TypedSetWhereUniqueInputSchema),z.lazy(() => TypedSetWhereUniqueInputSchema).array() ]).optional(),
+  update: z.union([ z.lazy(() => TypedSetUpdateWithWhereUniqueWithoutLoggedExerciseInputSchema),z.lazy(() => TypedSetUpdateWithWhereUniqueWithoutLoggedExerciseInputSchema).array() ]).optional(),
+  updateMany: z.union([ z.lazy(() => TypedSetUpdateManyWithWhereWithoutLoggedExerciseInputSchema),z.lazy(() => TypedSetUpdateManyWithWhereWithoutLoggedExerciseInputSchema).array() ]).optional(),
+  deleteMany: z.union([ z.lazy(() => TypedSetScalarWhereInputSchema),z.lazy(() => TypedSetScalarWhereInputSchema).array() ]).optional(),
+}).strict();
+
+export const TypedSetUncheckedUpdateManyWithoutLoggedExerciseNestedInputSchema: z.ZodType<Prisma.TypedSetUncheckedUpdateManyWithoutLoggedExerciseNestedInput> = z.object({
+  create: z.union([ z.lazy(() => TypedSetCreateWithoutLoggedExerciseInputSchema),z.lazy(() => TypedSetCreateWithoutLoggedExerciseInputSchema).array(),z.lazy(() => TypedSetUncheckedCreateWithoutLoggedExerciseInputSchema),z.lazy(() => TypedSetUncheckedCreateWithoutLoggedExerciseInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => TypedSetCreateOrConnectWithoutLoggedExerciseInputSchema),z.lazy(() => TypedSetCreateOrConnectWithoutLoggedExerciseInputSchema).array() ]).optional(),
+  upsert: z.union([ z.lazy(() => TypedSetUpsertWithWhereUniqueWithoutLoggedExerciseInputSchema),z.lazy(() => TypedSetUpsertWithWhereUniqueWithoutLoggedExerciseInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => TypedSetCreateManyLoggedExerciseInputEnvelopeSchema).optional(),
+  set: z.union([ z.lazy(() => TypedSetWhereUniqueInputSchema),z.lazy(() => TypedSetWhereUniqueInputSchema).array() ]).optional(),
+  disconnect: z.union([ z.lazy(() => TypedSetWhereUniqueInputSchema),z.lazy(() => TypedSetWhereUniqueInputSchema).array() ]).optional(),
+  delete: z.union([ z.lazy(() => TypedSetWhereUniqueInputSchema),z.lazy(() => TypedSetWhereUniqueInputSchema).array() ]).optional(),
+  connect: z.union([ z.lazy(() => TypedSetWhereUniqueInputSchema),z.lazy(() => TypedSetWhereUniqueInputSchema).array() ]).optional(),
+  update: z.union([ z.lazy(() => TypedSetUpdateWithWhereUniqueWithoutLoggedExerciseInputSchema),z.lazy(() => TypedSetUpdateWithWhereUniqueWithoutLoggedExerciseInputSchema).array() ]).optional(),
+  updateMany: z.union([ z.lazy(() => TypedSetUpdateManyWithWhereWithoutLoggedExerciseInputSchema),z.lazy(() => TypedSetUpdateManyWithWhereWithoutLoggedExerciseInputSchema).array() ]).optional(),
+  deleteMany: z.union([ z.lazy(() => TypedSetScalarWhereInputSchema),z.lazy(() => TypedSetScalarWhereInputSchema).array() ]).optional(),
+}).strict();
+
+export const LoggedExerciseCreateNestedOneWithoutSetsInputSchema: z.ZodType<Prisma.LoggedExerciseCreateNestedOneWithoutSetsInput> = z.object({
+  create: z.union([ z.lazy(() => LoggedExerciseCreateWithoutSetsInputSchema),z.lazy(() => LoggedExerciseUncheckedCreateWithoutSetsInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => LoggedExerciseCreateOrConnectWithoutSetsInputSchema).optional(),
+  connect: z.lazy(() => LoggedExerciseWhereUniqueInputSchema).optional()
+}).strict();
+
+export const EnumSetTypeFieldUpdateOperationsInputSchema: z.ZodType<Prisma.EnumSetTypeFieldUpdateOperationsInput> = z.object({
+  set: z.lazy(() => SetTypeSchema).optional()
+}).strict();
+
+export const IntFieldUpdateOperationsInputSchema: z.ZodType<Prisma.IntFieldUpdateOperationsInput> = z.object({
+  set: z.number().optional(),
+  increment: z.number().optional(),
+  decrement: z.number().optional(),
+  multiply: z.number().optional(),
+  divide: z.number().optional()
+}).strict();
+
+export const LoggedExerciseUpdateOneWithoutSetsNestedInputSchema: z.ZodType<Prisma.LoggedExerciseUpdateOneWithoutSetsNestedInput> = z.object({
+  create: z.union([ z.lazy(() => LoggedExerciseCreateWithoutSetsInputSchema),z.lazy(() => LoggedExerciseUncheckedCreateWithoutSetsInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => LoggedExerciseCreateOrConnectWithoutSetsInputSchema).optional(),
+  upsert: z.lazy(() => LoggedExerciseUpsertWithoutSetsInputSchema).optional(),
+  disconnect: z.union([ z.boolean(),z.lazy(() => LoggedExerciseWhereInputSchema) ]).optional(),
+  delete: z.union([ z.boolean(),z.lazy(() => LoggedExerciseWhereInputSchema) ]).optional(),
+  connect: z.lazy(() => LoggedExerciseWhereUniqueInputSchema).optional(),
+  update: z.union([ z.lazy(() => LoggedExerciseUpdateToOneWithWhereWithoutSetsInputSchema),z.lazy(() => LoggedExerciseUpdateWithoutSetsInputSchema),z.lazy(() => LoggedExerciseUncheckedUpdateWithoutSetsInputSchema) ]).optional(),
+}).strict();
+
+export const UserCreateNestedOneWithoutLogsInputSchema: z.ZodType<Prisma.UserCreateNestedOneWithoutLogsInput> = z.object({
+  create: z.union([ z.lazy(() => UserCreateWithoutLogsInputSchema),z.lazy(() => UserUncheckedCreateWithoutLogsInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => UserCreateOrConnectWithoutLogsInputSchema).optional(),
+  connect: z.lazy(() => UserWhereUniqueInputSchema).optional()
+}).strict();
+
+export const LoggedExerciseCreateNestedManyWithoutLogInputSchema: z.ZodType<Prisma.LoggedExerciseCreateNestedManyWithoutLogInput> = z.object({
+  create: z.union([ z.lazy(() => LoggedExerciseCreateWithoutLogInputSchema),z.lazy(() => LoggedExerciseCreateWithoutLogInputSchema).array(),z.lazy(() => LoggedExerciseUncheckedCreateWithoutLogInputSchema),z.lazy(() => LoggedExerciseUncheckedCreateWithoutLogInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => LoggedExerciseCreateOrConnectWithoutLogInputSchema),z.lazy(() => LoggedExerciseCreateOrConnectWithoutLogInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => LoggedExerciseCreateManyLogInputEnvelopeSchema).optional(),
+  connect: z.union([ z.lazy(() => LoggedExerciseWhereUniqueInputSchema),z.lazy(() => LoggedExerciseWhereUniqueInputSchema).array() ]).optional(),
+}).strict();
+
+export const LoggedExerciseUncheckedCreateNestedManyWithoutLogInputSchema: z.ZodType<Prisma.LoggedExerciseUncheckedCreateNestedManyWithoutLogInput> = z.object({
+  create: z.union([ z.lazy(() => LoggedExerciseCreateWithoutLogInputSchema),z.lazy(() => LoggedExerciseCreateWithoutLogInputSchema).array(),z.lazy(() => LoggedExerciseUncheckedCreateWithoutLogInputSchema),z.lazy(() => LoggedExerciseUncheckedCreateWithoutLogInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => LoggedExerciseCreateOrConnectWithoutLogInputSchema),z.lazy(() => LoggedExerciseCreateOrConnectWithoutLogInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => LoggedExerciseCreateManyLogInputEnvelopeSchema).optional(),
+  connect: z.union([ z.lazy(() => LoggedExerciseWhereUniqueInputSchema),z.lazy(() => LoggedExerciseWhereUniqueInputSchema).array() ]).optional(),
+}).strict();
+
+export const UserUpdateOneRequiredWithoutLogsNestedInputSchema: z.ZodType<Prisma.UserUpdateOneRequiredWithoutLogsNestedInput> = z.object({
+  create: z.union([ z.lazy(() => UserCreateWithoutLogsInputSchema),z.lazy(() => UserUncheckedCreateWithoutLogsInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => UserCreateOrConnectWithoutLogsInputSchema).optional(),
+  upsert: z.lazy(() => UserUpsertWithoutLogsInputSchema).optional(),
+  connect: z.lazy(() => UserWhereUniqueInputSchema).optional(),
+  update: z.union([ z.lazy(() => UserUpdateToOneWithWhereWithoutLogsInputSchema),z.lazy(() => UserUpdateWithoutLogsInputSchema),z.lazy(() => UserUncheckedUpdateWithoutLogsInputSchema) ]).optional(),
+}).strict();
+
+export const LoggedExerciseUpdateManyWithoutLogNestedInputSchema: z.ZodType<Prisma.LoggedExerciseUpdateManyWithoutLogNestedInput> = z.object({
+  create: z.union([ z.lazy(() => LoggedExerciseCreateWithoutLogInputSchema),z.lazy(() => LoggedExerciseCreateWithoutLogInputSchema).array(),z.lazy(() => LoggedExerciseUncheckedCreateWithoutLogInputSchema),z.lazy(() => LoggedExerciseUncheckedCreateWithoutLogInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => LoggedExerciseCreateOrConnectWithoutLogInputSchema),z.lazy(() => LoggedExerciseCreateOrConnectWithoutLogInputSchema).array() ]).optional(),
+  upsert: z.union([ z.lazy(() => LoggedExerciseUpsertWithWhereUniqueWithoutLogInputSchema),z.lazy(() => LoggedExerciseUpsertWithWhereUniqueWithoutLogInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => LoggedExerciseCreateManyLogInputEnvelopeSchema).optional(),
+  set: z.union([ z.lazy(() => LoggedExerciseWhereUniqueInputSchema),z.lazy(() => LoggedExerciseWhereUniqueInputSchema).array() ]).optional(),
+  disconnect: z.union([ z.lazy(() => LoggedExerciseWhereUniqueInputSchema),z.lazy(() => LoggedExerciseWhereUniqueInputSchema).array() ]).optional(),
+  delete: z.union([ z.lazy(() => LoggedExerciseWhereUniqueInputSchema),z.lazy(() => LoggedExerciseWhereUniqueInputSchema).array() ]).optional(),
+  connect: z.union([ z.lazy(() => LoggedExerciseWhereUniqueInputSchema),z.lazy(() => LoggedExerciseWhereUniqueInputSchema).array() ]).optional(),
+  update: z.union([ z.lazy(() => LoggedExerciseUpdateWithWhereUniqueWithoutLogInputSchema),z.lazy(() => LoggedExerciseUpdateWithWhereUniqueWithoutLogInputSchema).array() ]).optional(),
+  updateMany: z.union([ z.lazy(() => LoggedExerciseUpdateManyWithWhereWithoutLogInputSchema),z.lazy(() => LoggedExerciseUpdateManyWithWhereWithoutLogInputSchema).array() ]).optional(),
+  deleteMany: z.union([ z.lazy(() => LoggedExerciseScalarWhereInputSchema),z.lazy(() => LoggedExerciseScalarWhereInputSchema).array() ]).optional(),
+}).strict();
+
+export const LoggedExerciseUncheckedUpdateManyWithoutLogNestedInputSchema: z.ZodType<Prisma.LoggedExerciseUncheckedUpdateManyWithoutLogNestedInput> = z.object({
+  create: z.union([ z.lazy(() => LoggedExerciseCreateWithoutLogInputSchema),z.lazy(() => LoggedExerciseCreateWithoutLogInputSchema).array(),z.lazy(() => LoggedExerciseUncheckedCreateWithoutLogInputSchema),z.lazy(() => LoggedExerciseUncheckedCreateWithoutLogInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => LoggedExerciseCreateOrConnectWithoutLogInputSchema),z.lazy(() => LoggedExerciseCreateOrConnectWithoutLogInputSchema).array() ]).optional(),
+  upsert: z.union([ z.lazy(() => LoggedExerciseUpsertWithWhereUniqueWithoutLogInputSchema),z.lazy(() => LoggedExerciseUpsertWithWhereUniqueWithoutLogInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => LoggedExerciseCreateManyLogInputEnvelopeSchema).optional(),
+  set: z.union([ z.lazy(() => LoggedExerciseWhereUniqueInputSchema),z.lazy(() => LoggedExerciseWhereUniqueInputSchema).array() ]).optional(),
+  disconnect: z.union([ z.lazy(() => LoggedExerciseWhereUniqueInputSchema),z.lazy(() => LoggedExerciseWhereUniqueInputSchema).array() ]).optional(),
+  delete: z.union([ z.lazy(() => LoggedExerciseWhereUniqueInputSchema),z.lazy(() => LoggedExerciseWhereUniqueInputSchema).array() ]).optional(),
+  connect: z.union([ z.lazy(() => LoggedExerciseWhereUniqueInputSchema),z.lazy(() => LoggedExerciseWhereUniqueInputSchema).array() ]).optional(),
+  update: z.union([ z.lazy(() => LoggedExerciseUpdateWithWhereUniqueWithoutLogInputSchema),z.lazy(() => LoggedExerciseUpdateWithWhereUniqueWithoutLogInputSchema).array() ]).optional(),
+  updateMany: z.union([ z.lazy(() => LoggedExerciseUpdateManyWithWhereWithoutLogInputSchema),z.lazy(() => LoggedExerciseUpdateManyWithWhereWithoutLogInputSchema).array() ]).optional(),
+  deleteMany: z.union([ z.lazy(() => LoggedExerciseScalarWhereInputSchema),z.lazy(() => LoggedExerciseScalarWhereInputSchema).array() ]).optional(),
 }).strict();
 
 export const NestedStringFilterSchema: z.ZodType<Prisma.NestedStringFilter> = z.object({
@@ -1676,6 +2527,50 @@ export const NestedFloatNullableFilterSchema: z.ZodType<Prisma.NestedFloatNullab
   not: z.union([ z.number(),z.lazy(() => NestedFloatNullableFilterSchema) ]).optional().nullable(),
 }).strict();
 
+export const NestedEnumSetTypeFilterSchema: z.ZodType<Prisma.NestedEnumSetTypeFilter> = z.object({
+  equals: z.lazy(() => SetTypeSchema).optional(),
+  in: z.lazy(() => SetTypeSchema).array().optional(),
+  notIn: z.lazy(() => SetTypeSchema).array().optional(),
+  not: z.union([ z.lazy(() => SetTypeSchema),z.lazy(() => NestedEnumSetTypeFilterSchema) ]).optional(),
+}).strict();
+
+export const NestedEnumSetTypeWithAggregatesFilterSchema: z.ZodType<Prisma.NestedEnumSetTypeWithAggregatesFilter> = z.object({
+  equals: z.lazy(() => SetTypeSchema).optional(),
+  in: z.lazy(() => SetTypeSchema).array().optional(),
+  notIn: z.lazy(() => SetTypeSchema).array().optional(),
+  not: z.union([ z.lazy(() => SetTypeSchema),z.lazy(() => NestedEnumSetTypeWithAggregatesFilterSchema) ]).optional(),
+  _count: z.lazy(() => NestedIntFilterSchema).optional(),
+  _min: z.lazy(() => NestedEnumSetTypeFilterSchema).optional(),
+  _max: z.lazy(() => NestedEnumSetTypeFilterSchema).optional()
+}).strict();
+
+export const NestedIntWithAggregatesFilterSchema: z.ZodType<Prisma.NestedIntWithAggregatesFilter> = z.object({
+  equals: z.number().optional(),
+  in: z.number().array().optional(),
+  notIn: z.number().array().optional(),
+  lt: z.number().optional(),
+  lte: z.number().optional(),
+  gt: z.number().optional(),
+  gte: z.number().optional(),
+  not: z.union([ z.number(),z.lazy(() => NestedIntWithAggregatesFilterSchema) ]).optional(),
+  _count: z.lazy(() => NestedIntFilterSchema).optional(),
+  _avg: z.lazy(() => NestedFloatFilterSchema).optional(),
+  _sum: z.lazy(() => NestedIntFilterSchema).optional(),
+  _min: z.lazy(() => NestedIntFilterSchema).optional(),
+  _max: z.lazy(() => NestedIntFilterSchema).optional()
+}).strict();
+
+export const NestedFloatFilterSchema: z.ZodType<Prisma.NestedFloatFilter> = z.object({
+  equals: z.number().optional(),
+  in: z.number().array().optional(),
+  notIn: z.number().array().optional(),
+  lt: z.number().optional(),
+  lte: z.number().optional(),
+  gt: z.number().optional(),
+  gte: z.number().optional(),
+  not: z.union([ z.number(),z.lazy(() => NestedFloatFilterSchema) ]).optional(),
+}).strict();
+
 export const AccountCreateWithoutUserInputSchema: z.ZodType<Prisma.AccountCreateWithoutUserInput> = z.object({
   type: z.string(),
   provider: z.string(),
@@ -1737,6 +2632,28 @@ export const SessionCreateOrConnectWithoutUserInputSchema: z.ZodType<Prisma.Sess
 
 export const SessionCreateManyUserInputEnvelopeSchema: z.ZodType<Prisma.SessionCreateManyUserInputEnvelope> = z.object({
   data: z.union([ z.lazy(() => SessionCreateManyUserInputSchema),z.lazy(() => SessionCreateManyUserInputSchema).array() ]),
+  skipDuplicates: z.boolean().optional()
+}).strict();
+
+export const LogCreateWithoutUserInputSchema: z.ZodType<Prisma.LogCreateWithoutUserInput> = z.object({
+  id: z.string().uuid().optional(),
+  date: z.string(),
+  exercises: z.lazy(() => LoggedExerciseCreateNestedManyWithoutLogInputSchema).optional()
+}).strict();
+
+export const LogUncheckedCreateWithoutUserInputSchema: z.ZodType<Prisma.LogUncheckedCreateWithoutUserInput> = z.object({
+  id: z.string().uuid().optional(),
+  date: z.string(),
+  exercises: z.lazy(() => LoggedExerciseUncheckedCreateNestedManyWithoutLogInputSchema).optional()
+}).strict();
+
+export const LogCreateOrConnectWithoutUserInputSchema: z.ZodType<Prisma.LogCreateOrConnectWithoutUserInput> = z.object({
+  where: z.lazy(() => LogWhereUniqueInputSchema),
+  create: z.union([ z.lazy(() => LogCreateWithoutUserInputSchema),z.lazy(() => LogUncheckedCreateWithoutUserInputSchema) ]),
+}).strict();
+
+export const LogCreateManyUserInputEnvelopeSchema: z.ZodType<Prisma.LogCreateManyUserInputEnvelope> = z.object({
+  data: z.union([ z.lazy(() => LogCreateManyUserInputSchema),z.lazy(() => LogCreateManyUserInputSchema).array() ]),
   skipDuplicates: z.boolean().optional()
 }).strict();
 
@@ -1802,6 +2719,31 @@ export const SessionScalarWhereInputSchema: z.ZodType<Prisma.SessionScalarWhereI
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
 }).strict();
 
+export const LogUpsertWithWhereUniqueWithoutUserInputSchema: z.ZodType<Prisma.LogUpsertWithWhereUniqueWithoutUserInput> = z.object({
+  where: z.lazy(() => LogWhereUniqueInputSchema),
+  update: z.union([ z.lazy(() => LogUpdateWithoutUserInputSchema),z.lazy(() => LogUncheckedUpdateWithoutUserInputSchema) ]),
+  create: z.union([ z.lazy(() => LogCreateWithoutUserInputSchema),z.lazy(() => LogUncheckedCreateWithoutUserInputSchema) ]),
+}).strict();
+
+export const LogUpdateWithWhereUniqueWithoutUserInputSchema: z.ZodType<Prisma.LogUpdateWithWhereUniqueWithoutUserInput> = z.object({
+  where: z.lazy(() => LogWhereUniqueInputSchema),
+  data: z.union([ z.lazy(() => LogUpdateWithoutUserInputSchema),z.lazy(() => LogUncheckedUpdateWithoutUserInputSchema) ]),
+}).strict();
+
+export const LogUpdateManyWithWhereWithoutUserInputSchema: z.ZodType<Prisma.LogUpdateManyWithWhereWithoutUserInput> = z.object({
+  where: z.lazy(() => LogScalarWhereInputSchema),
+  data: z.union([ z.lazy(() => LogUpdateManyMutationInputSchema),z.lazy(() => LogUncheckedUpdateManyWithoutUserInputSchema) ]),
+}).strict();
+
+export const LogScalarWhereInputSchema: z.ZodType<Prisma.LogScalarWhereInput> = z.object({
+  AND: z.union([ z.lazy(() => LogScalarWhereInputSchema),z.lazy(() => LogScalarWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => LogScalarWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => LogScalarWhereInputSchema),z.lazy(() => LogScalarWhereInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  date: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  userId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+}).strict();
+
 export const UserCreateWithoutAccountsInputSchema: z.ZodType<Prisma.UserCreateWithoutAccountsInput> = z.object({
   id: z.string().cuid().optional(),
   name: z.string().optional().nullable(),
@@ -1810,7 +2752,8 @@ export const UserCreateWithoutAccountsInputSchema: z.ZodType<Prisma.UserCreateWi
   image: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  sessions: z.lazy(() => SessionCreateNestedManyWithoutUserInputSchema).optional()
+  sessions: z.lazy(() => SessionCreateNestedManyWithoutUserInputSchema).optional(),
+  logs: z.lazy(() => LogCreateNestedManyWithoutUserInputSchema).optional()
 }).strict();
 
 export const UserUncheckedCreateWithoutAccountsInputSchema: z.ZodType<Prisma.UserUncheckedCreateWithoutAccountsInput> = z.object({
@@ -1821,7 +2764,8 @@ export const UserUncheckedCreateWithoutAccountsInputSchema: z.ZodType<Prisma.Use
   image: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  sessions: z.lazy(() => SessionUncheckedCreateNestedManyWithoutUserInputSchema).optional()
+  sessions: z.lazy(() => SessionUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
+  logs: z.lazy(() => LogUncheckedCreateNestedManyWithoutUserInputSchema).optional()
 }).strict();
 
 export const UserCreateOrConnectWithoutAccountsInputSchema: z.ZodType<Prisma.UserCreateOrConnectWithoutAccountsInput> = z.object({
@@ -1848,7 +2792,8 @@ export const UserUpdateWithoutAccountsInputSchema: z.ZodType<Prisma.UserUpdateWi
   image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  sessions: z.lazy(() => SessionUpdateManyWithoutUserNestedInputSchema).optional()
+  sessions: z.lazy(() => SessionUpdateManyWithoutUserNestedInputSchema).optional(),
+  logs: z.lazy(() => LogUpdateManyWithoutUserNestedInputSchema).optional()
 }).strict();
 
 export const UserUncheckedUpdateWithoutAccountsInputSchema: z.ZodType<Prisma.UserUncheckedUpdateWithoutAccountsInput> = z.object({
@@ -1859,7 +2804,8 @@ export const UserUncheckedUpdateWithoutAccountsInputSchema: z.ZodType<Prisma.Use
   image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  sessions: z.lazy(() => SessionUncheckedUpdateManyWithoutUserNestedInputSchema).optional()
+  sessions: z.lazy(() => SessionUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
+  logs: z.lazy(() => LogUncheckedUpdateManyWithoutUserNestedInputSchema).optional()
 }).strict();
 
 export const UserCreateWithoutSessionsInputSchema: z.ZodType<Prisma.UserCreateWithoutSessionsInput> = z.object({
@@ -1870,7 +2816,8 @@ export const UserCreateWithoutSessionsInputSchema: z.ZodType<Prisma.UserCreateWi
   image: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  accounts: z.lazy(() => AccountCreateNestedManyWithoutUserInputSchema).optional()
+  accounts: z.lazy(() => AccountCreateNestedManyWithoutUserInputSchema).optional(),
+  logs: z.lazy(() => LogCreateNestedManyWithoutUserInputSchema).optional()
 }).strict();
 
 export const UserUncheckedCreateWithoutSessionsInputSchema: z.ZodType<Prisma.UserUncheckedCreateWithoutSessionsInput> = z.object({
@@ -1881,7 +2828,8 @@ export const UserUncheckedCreateWithoutSessionsInputSchema: z.ZodType<Prisma.Use
   image: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  accounts: z.lazy(() => AccountUncheckedCreateNestedManyWithoutUserInputSchema).optional()
+  accounts: z.lazy(() => AccountUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
+  logs: z.lazy(() => LogUncheckedCreateNestedManyWithoutUserInputSchema).optional()
 }).strict();
 
 export const UserCreateOrConnectWithoutSessionsInputSchema: z.ZodType<Prisma.UserCreateOrConnectWithoutSessionsInput> = z.object({
@@ -1908,7 +2856,8 @@ export const UserUpdateWithoutSessionsInputSchema: z.ZodType<Prisma.UserUpdateWi
   image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  accounts: z.lazy(() => AccountUpdateManyWithoutUserNestedInputSchema).optional()
+  accounts: z.lazy(() => AccountUpdateManyWithoutUserNestedInputSchema).optional(),
+  logs: z.lazy(() => LogUpdateManyWithoutUserNestedInputSchema).optional()
 }).strict();
 
 export const UserUncheckedUpdateWithoutSessionsInputSchema: z.ZodType<Prisma.UserUncheckedUpdateWithoutSessionsInput> = z.object({
@@ -1919,7 +2868,259 @@ export const UserUncheckedUpdateWithoutSessionsInputSchema: z.ZodType<Prisma.Use
   image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  accounts: z.lazy(() => AccountUncheckedUpdateManyWithoutUserNestedInputSchema).optional()
+  accounts: z.lazy(() => AccountUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
+  logs: z.lazy(() => LogUncheckedUpdateManyWithoutUserNestedInputSchema).optional()
+}).strict();
+
+export const LogCreateWithoutExercisesInputSchema: z.ZodType<Prisma.LogCreateWithoutExercisesInput> = z.object({
+  id: z.string().uuid().optional(),
+  date: z.string(),
+  user: z.lazy(() => UserCreateNestedOneWithoutLogsInputSchema)
+}).strict();
+
+export const LogUncheckedCreateWithoutExercisesInputSchema: z.ZodType<Prisma.LogUncheckedCreateWithoutExercisesInput> = z.object({
+  id: z.string().uuid().optional(),
+  date: z.string(),
+  userId: z.string()
+}).strict();
+
+export const LogCreateOrConnectWithoutExercisesInputSchema: z.ZodType<Prisma.LogCreateOrConnectWithoutExercisesInput> = z.object({
+  where: z.lazy(() => LogWhereUniqueInputSchema),
+  create: z.union([ z.lazy(() => LogCreateWithoutExercisesInputSchema),z.lazy(() => LogUncheckedCreateWithoutExercisesInputSchema) ]),
+}).strict();
+
+export const TypedSetCreateWithoutLoggedExerciseInputSchema: z.ZodType<Prisma.TypedSetCreateWithoutLoggedExerciseInput> = z.object({
+  id: z.string().uuid().optional(),
+  type: z.lazy(() => SetTypeSchema).optional(),
+  weight: z.number().int(),
+  reps: z.number().int(),
+  distance: z.string(),
+  minutes: z.number().int(),
+  seconds: z.number().int()
+}).strict();
+
+export const TypedSetUncheckedCreateWithoutLoggedExerciseInputSchema: z.ZodType<Prisma.TypedSetUncheckedCreateWithoutLoggedExerciseInput> = z.object({
+  id: z.string().uuid().optional(),
+  type: z.lazy(() => SetTypeSchema).optional(),
+  weight: z.number().int(),
+  reps: z.number().int(),
+  distance: z.string(),
+  minutes: z.number().int(),
+  seconds: z.number().int()
+}).strict();
+
+export const TypedSetCreateOrConnectWithoutLoggedExerciseInputSchema: z.ZodType<Prisma.TypedSetCreateOrConnectWithoutLoggedExerciseInput> = z.object({
+  where: z.lazy(() => TypedSetWhereUniqueInputSchema),
+  create: z.union([ z.lazy(() => TypedSetCreateWithoutLoggedExerciseInputSchema),z.lazy(() => TypedSetUncheckedCreateWithoutLoggedExerciseInputSchema) ]),
+}).strict();
+
+export const TypedSetCreateManyLoggedExerciseInputEnvelopeSchema: z.ZodType<Prisma.TypedSetCreateManyLoggedExerciseInputEnvelope> = z.object({
+  data: z.union([ z.lazy(() => TypedSetCreateManyLoggedExerciseInputSchema),z.lazy(() => TypedSetCreateManyLoggedExerciseInputSchema).array() ]),
+  skipDuplicates: z.boolean().optional()
+}).strict();
+
+export const LogUpsertWithoutExercisesInputSchema: z.ZodType<Prisma.LogUpsertWithoutExercisesInput> = z.object({
+  update: z.union([ z.lazy(() => LogUpdateWithoutExercisesInputSchema),z.lazy(() => LogUncheckedUpdateWithoutExercisesInputSchema) ]),
+  create: z.union([ z.lazy(() => LogCreateWithoutExercisesInputSchema),z.lazy(() => LogUncheckedCreateWithoutExercisesInputSchema) ]),
+  where: z.lazy(() => LogWhereInputSchema).optional()
+}).strict();
+
+export const LogUpdateToOneWithWhereWithoutExercisesInputSchema: z.ZodType<Prisma.LogUpdateToOneWithWhereWithoutExercisesInput> = z.object({
+  where: z.lazy(() => LogWhereInputSchema).optional(),
+  data: z.union([ z.lazy(() => LogUpdateWithoutExercisesInputSchema),z.lazy(() => LogUncheckedUpdateWithoutExercisesInputSchema) ]),
+}).strict();
+
+export const LogUpdateWithoutExercisesInputSchema: z.ZodType<Prisma.LogUpdateWithoutExercisesInput> = z.object({
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  date: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  user: z.lazy(() => UserUpdateOneRequiredWithoutLogsNestedInputSchema).optional()
+}).strict();
+
+export const LogUncheckedUpdateWithoutExercisesInputSchema: z.ZodType<Prisma.LogUncheckedUpdateWithoutExercisesInput> = z.object({
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  date: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const TypedSetUpsertWithWhereUniqueWithoutLoggedExerciseInputSchema: z.ZodType<Prisma.TypedSetUpsertWithWhereUniqueWithoutLoggedExerciseInput> = z.object({
+  where: z.lazy(() => TypedSetWhereUniqueInputSchema),
+  update: z.union([ z.lazy(() => TypedSetUpdateWithoutLoggedExerciseInputSchema),z.lazy(() => TypedSetUncheckedUpdateWithoutLoggedExerciseInputSchema) ]),
+  create: z.union([ z.lazy(() => TypedSetCreateWithoutLoggedExerciseInputSchema),z.lazy(() => TypedSetUncheckedCreateWithoutLoggedExerciseInputSchema) ]),
+}).strict();
+
+export const TypedSetUpdateWithWhereUniqueWithoutLoggedExerciseInputSchema: z.ZodType<Prisma.TypedSetUpdateWithWhereUniqueWithoutLoggedExerciseInput> = z.object({
+  where: z.lazy(() => TypedSetWhereUniqueInputSchema),
+  data: z.union([ z.lazy(() => TypedSetUpdateWithoutLoggedExerciseInputSchema),z.lazy(() => TypedSetUncheckedUpdateWithoutLoggedExerciseInputSchema) ]),
+}).strict();
+
+export const TypedSetUpdateManyWithWhereWithoutLoggedExerciseInputSchema: z.ZodType<Prisma.TypedSetUpdateManyWithWhereWithoutLoggedExerciseInput> = z.object({
+  where: z.lazy(() => TypedSetScalarWhereInputSchema),
+  data: z.union([ z.lazy(() => TypedSetUpdateManyMutationInputSchema),z.lazy(() => TypedSetUncheckedUpdateManyWithoutLoggedExerciseInputSchema) ]),
+}).strict();
+
+export const TypedSetScalarWhereInputSchema: z.ZodType<Prisma.TypedSetScalarWhereInput> = z.object({
+  AND: z.union([ z.lazy(() => TypedSetScalarWhereInputSchema),z.lazy(() => TypedSetScalarWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => TypedSetScalarWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => TypedSetScalarWhereInputSchema),z.lazy(() => TypedSetScalarWhereInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  type: z.union([ z.lazy(() => EnumSetTypeFilterSchema),z.lazy(() => SetTypeSchema) ]).optional(),
+  loggedExerciseId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  weight: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
+  reps: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
+  distance: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  minutes: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
+  seconds: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
+}).strict();
+
+export const LoggedExerciseCreateWithoutSetsInputSchema: z.ZodType<Prisma.LoggedExerciseCreateWithoutSetsInput> = z.object({
+  id: z.string().uuid().optional(),
+  exerciseSlug: z.string(),
+  log: z.lazy(() => LogCreateNestedOneWithoutExercisesInputSchema).optional()
+}).strict();
+
+export const LoggedExerciseUncheckedCreateWithoutSetsInputSchema: z.ZodType<Prisma.LoggedExerciseUncheckedCreateWithoutSetsInput> = z.object({
+  id: z.string().uuid().optional(),
+  exerciseSlug: z.string(),
+  logId: z.string().optional().nullable()
+}).strict();
+
+export const LoggedExerciseCreateOrConnectWithoutSetsInputSchema: z.ZodType<Prisma.LoggedExerciseCreateOrConnectWithoutSetsInput> = z.object({
+  where: z.lazy(() => LoggedExerciseWhereUniqueInputSchema),
+  create: z.union([ z.lazy(() => LoggedExerciseCreateWithoutSetsInputSchema),z.lazy(() => LoggedExerciseUncheckedCreateWithoutSetsInputSchema) ]),
+}).strict();
+
+export const LoggedExerciseUpsertWithoutSetsInputSchema: z.ZodType<Prisma.LoggedExerciseUpsertWithoutSetsInput> = z.object({
+  update: z.union([ z.lazy(() => LoggedExerciseUpdateWithoutSetsInputSchema),z.lazy(() => LoggedExerciseUncheckedUpdateWithoutSetsInputSchema) ]),
+  create: z.union([ z.lazy(() => LoggedExerciseCreateWithoutSetsInputSchema),z.lazy(() => LoggedExerciseUncheckedCreateWithoutSetsInputSchema) ]),
+  where: z.lazy(() => LoggedExerciseWhereInputSchema).optional()
+}).strict();
+
+export const LoggedExerciseUpdateToOneWithWhereWithoutSetsInputSchema: z.ZodType<Prisma.LoggedExerciseUpdateToOneWithWhereWithoutSetsInput> = z.object({
+  where: z.lazy(() => LoggedExerciseWhereInputSchema).optional(),
+  data: z.union([ z.lazy(() => LoggedExerciseUpdateWithoutSetsInputSchema),z.lazy(() => LoggedExerciseUncheckedUpdateWithoutSetsInputSchema) ]),
+}).strict();
+
+export const LoggedExerciseUpdateWithoutSetsInputSchema: z.ZodType<Prisma.LoggedExerciseUpdateWithoutSetsInput> = z.object({
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  exerciseSlug: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  log: z.lazy(() => LogUpdateOneWithoutExercisesNestedInputSchema).optional()
+}).strict();
+
+export const LoggedExerciseUncheckedUpdateWithoutSetsInputSchema: z.ZodType<Prisma.LoggedExerciseUncheckedUpdateWithoutSetsInput> = z.object({
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  exerciseSlug: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  logId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+}).strict();
+
+export const UserCreateWithoutLogsInputSchema: z.ZodType<Prisma.UserCreateWithoutLogsInput> = z.object({
+  id: z.string().cuid().optional(),
+  name: z.string().optional().nullable(),
+  email: z.string(),
+  emailVerified: z.coerce.date().optional().nullable(),
+  image: z.string().optional().nullable(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+  accounts: z.lazy(() => AccountCreateNestedManyWithoutUserInputSchema).optional(),
+  sessions: z.lazy(() => SessionCreateNestedManyWithoutUserInputSchema).optional()
+}).strict();
+
+export const UserUncheckedCreateWithoutLogsInputSchema: z.ZodType<Prisma.UserUncheckedCreateWithoutLogsInput> = z.object({
+  id: z.string().cuid().optional(),
+  name: z.string().optional().nullable(),
+  email: z.string(),
+  emailVerified: z.coerce.date().optional().nullable(),
+  image: z.string().optional().nullable(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+  accounts: z.lazy(() => AccountUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
+  sessions: z.lazy(() => SessionUncheckedCreateNestedManyWithoutUserInputSchema).optional()
+}).strict();
+
+export const UserCreateOrConnectWithoutLogsInputSchema: z.ZodType<Prisma.UserCreateOrConnectWithoutLogsInput> = z.object({
+  where: z.lazy(() => UserWhereUniqueInputSchema),
+  create: z.union([ z.lazy(() => UserCreateWithoutLogsInputSchema),z.lazy(() => UserUncheckedCreateWithoutLogsInputSchema) ]),
+}).strict();
+
+export const LoggedExerciseCreateWithoutLogInputSchema: z.ZodType<Prisma.LoggedExerciseCreateWithoutLogInput> = z.object({
+  id: z.string().uuid().optional(),
+  exerciseSlug: z.string(),
+  sets: z.lazy(() => TypedSetCreateNestedManyWithoutLoggedExerciseInputSchema).optional()
+}).strict();
+
+export const LoggedExerciseUncheckedCreateWithoutLogInputSchema: z.ZodType<Prisma.LoggedExerciseUncheckedCreateWithoutLogInput> = z.object({
+  id: z.string().uuid().optional(),
+  exerciseSlug: z.string(),
+  sets: z.lazy(() => TypedSetUncheckedCreateNestedManyWithoutLoggedExerciseInputSchema).optional()
+}).strict();
+
+export const LoggedExerciseCreateOrConnectWithoutLogInputSchema: z.ZodType<Prisma.LoggedExerciseCreateOrConnectWithoutLogInput> = z.object({
+  where: z.lazy(() => LoggedExerciseWhereUniqueInputSchema),
+  create: z.union([ z.lazy(() => LoggedExerciseCreateWithoutLogInputSchema),z.lazy(() => LoggedExerciseUncheckedCreateWithoutLogInputSchema) ]),
+}).strict();
+
+export const LoggedExerciseCreateManyLogInputEnvelopeSchema: z.ZodType<Prisma.LoggedExerciseCreateManyLogInputEnvelope> = z.object({
+  data: z.union([ z.lazy(() => LoggedExerciseCreateManyLogInputSchema),z.lazy(() => LoggedExerciseCreateManyLogInputSchema).array() ]),
+  skipDuplicates: z.boolean().optional()
+}).strict();
+
+export const UserUpsertWithoutLogsInputSchema: z.ZodType<Prisma.UserUpsertWithoutLogsInput> = z.object({
+  update: z.union([ z.lazy(() => UserUpdateWithoutLogsInputSchema),z.lazy(() => UserUncheckedUpdateWithoutLogsInputSchema) ]),
+  create: z.union([ z.lazy(() => UserCreateWithoutLogsInputSchema),z.lazy(() => UserUncheckedCreateWithoutLogsInputSchema) ]),
+  where: z.lazy(() => UserWhereInputSchema).optional()
+}).strict();
+
+export const UserUpdateToOneWithWhereWithoutLogsInputSchema: z.ZodType<Prisma.UserUpdateToOneWithWhereWithoutLogsInput> = z.object({
+  where: z.lazy(() => UserWhereInputSchema).optional(),
+  data: z.union([ z.lazy(() => UserUpdateWithoutLogsInputSchema),z.lazy(() => UserUncheckedUpdateWithoutLogsInputSchema) ]),
+}).strict();
+
+export const UserUpdateWithoutLogsInputSchema: z.ZodType<Prisma.UserUpdateWithoutLogsInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  emailVerified: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  accounts: z.lazy(() => AccountUpdateManyWithoutUserNestedInputSchema).optional(),
+  sessions: z.lazy(() => SessionUpdateManyWithoutUserNestedInputSchema).optional()
+}).strict();
+
+export const UserUncheckedUpdateWithoutLogsInputSchema: z.ZodType<Prisma.UserUncheckedUpdateWithoutLogsInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  name: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  emailVerified: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  accounts: z.lazy(() => AccountUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
+  sessions: z.lazy(() => SessionUncheckedUpdateManyWithoutUserNestedInputSchema).optional()
+}).strict();
+
+export const LoggedExerciseUpsertWithWhereUniqueWithoutLogInputSchema: z.ZodType<Prisma.LoggedExerciseUpsertWithWhereUniqueWithoutLogInput> = z.object({
+  where: z.lazy(() => LoggedExerciseWhereUniqueInputSchema),
+  update: z.union([ z.lazy(() => LoggedExerciseUpdateWithoutLogInputSchema),z.lazy(() => LoggedExerciseUncheckedUpdateWithoutLogInputSchema) ]),
+  create: z.union([ z.lazy(() => LoggedExerciseCreateWithoutLogInputSchema),z.lazy(() => LoggedExerciseUncheckedCreateWithoutLogInputSchema) ]),
+}).strict();
+
+export const LoggedExerciseUpdateWithWhereUniqueWithoutLogInputSchema: z.ZodType<Prisma.LoggedExerciseUpdateWithWhereUniqueWithoutLogInput> = z.object({
+  where: z.lazy(() => LoggedExerciseWhereUniqueInputSchema),
+  data: z.union([ z.lazy(() => LoggedExerciseUpdateWithoutLogInputSchema),z.lazy(() => LoggedExerciseUncheckedUpdateWithoutLogInputSchema) ]),
+}).strict();
+
+export const LoggedExerciseUpdateManyWithWhereWithoutLogInputSchema: z.ZodType<Prisma.LoggedExerciseUpdateManyWithWhereWithoutLogInput> = z.object({
+  where: z.lazy(() => LoggedExerciseScalarWhereInputSchema),
+  data: z.union([ z.lazy(() => LoggedExerciseUpdateManyMutationInputSchema),z.lazy(() => LoggedExerciseUncheckedUpdateManyWithoutLogInputSchema) ]),
+}).strict();
+
+export const LoggedExerciseScalarWhereInputSchema: z.ZodType<Prisma.LoggedExerciseScalarWhereInput> = z.object({
+  AND: z.union([ z.lazy(() => LoggedExerciseScalarWhereInputSchema),z.lazy(() => LoggedExerciseScalarWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => LoggedExerciseScalarWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => LoggedExerciseScalarWhereInputSchema),z.lazy(() => LoggedExerciseScalarWhereInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  exerciseSlug: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  logId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
 }).strict();
 
 export const AccountCreateManyUserInputSchema: z.ZodType<Prisma.AccountCreateManyUserInput> = z.object({
@@ -1942,6 +3143,11 @@ export const SessionCreateManyUserInputSchema: z.ZodType<Prisma.SessionCreateMan
   expires: z.coerce.date(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
+}).strict();
+
+export const LogCreateManyUserInputSchema: z.ZodType<Prisma.LogCreateManyUserInput> = z.object({
+  id: z.string().uuid().optional(),
+  date: z.string()
 }).strict();
 
 export const AccountUpdateWithoutUserInputSchema: z.ZodType<Prisma.AccountUpdateWithoutUserInput> = z.object({
@@ -2008,6 +3214,85 @@ export const SessionUncheckedUpdateManyWithoutUserInputSchema: z.ZodType<Prisma.
   expires: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const LogUpdateWithoutUserInputSchema: z.ZodType<Prisma.LogUpdateWithoutUserInput> = z.object({
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  date: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  exercises: z.lazy(() => LoggedExerciseUpdateManyWithoutLogNestedInputSchema).optional()
+}).strict();
+
+export const LogUncheckedUpdateWithoutUserInputSchema: z.ZodType<Prisma.LogUncheckedUpdateWithoutUserInput> = z.object({
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  date: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  exercises: z.lazy(() => LoggedExerciseUncheckedUpdateManyWithoutLogNestedInputSchema).optional()
+}).strict();
+
+export const LogUncheckedUpdateManyWithoutUserInputSchema: z.ZodType<Prisma.LogUncheckedUpdateManyWithoutUserInput> = z.object({
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  date: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const TypedSetCreateManyLoggedExerciseInputSchema: z.ZodType<Prisma.TypedSetCreateManyLoggedExerciseInput> = z.object({
+  id: z.string().uuid().optional(),
+  type: z.lazy(() => SetTypeSchema).optional(),
+  weight: z.number().int(),
+  reps: z.number().int(),
+  distance: z.string(),
+  minutes: z.number().int(),
+  seconds: z.number().int()
+}).strict();
+
+export const TypedSetUpdateWithoutLoggedExerciseInputSchema: z.ZodType<Prisma.TypedSetUpdateWithoutLoggedExerciseInput> = z.object({
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  type: z.union([ z.lazy(() => SetTypeSchema),z.lazy(() => EnumSetTypeFieldUpdateOperationsInputSchema) ]).optional(),
+  weight: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  reps: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  distance: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  minutes: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  seconds: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const TypedSetUncheckedUpdateWithoutLoggedExerciseInputSchema: z.ZodType<Prisma.TypedSetUncheckedUpdateWithoutLoggedExerciseInput> = z.object({
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  type: z.union([ z.lazy(() => SetTypeSchema),z.lazy(() => EnumSetTypeFieldUpdateOperationsInputSchema) ]).optional(),
+  weight: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  reps: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  distance: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  minutes: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  seconds: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const TypedSetUncheckedUpdateManyWithoutLoggedExerciseInputSchema: z.ZodType<Prisma.TypedSetUncheckedUpdateManyWithoutLoggedExerciseInput> = z.object({
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  type: z.union([ z.lazy(() => SetTypeSchema),z.lazy(() => EnumSetTypeFieldUpdateOperationsInputSchema) ]).optional(),
+  weight: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  reps: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  distance: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  minutes: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  seconds: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const LoggedExerciseCreateManyLogInputSchema: z.ZodType<Prisma.LoggedExerciseCreateManyLogInput> = z.object({
+  id: z.string().uuid().optional(),
+  exerciseSlug: z.string()
+}).strict();
+
+export const LoggedExerciseUpdateWithoutLogInputSchema: z.ZodType<Prisma.LoggedExerciseUpdateWithoutLogInput> = z.object({
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  exerciseSlug: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  sets: z.lazy(() => TypedSetUpdateManyWithoutLoggedExerciseNestedInputSchema).optional()
+}).strict();
+
+export const LoggedExerciseUncheckedUpdateWithoutLogInputSchema: z.ZodType<Prisma.LoggedExerciseUncheckedUpdateWithoutLogInput> = z.object({
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  exerciseSlug: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  sets: z.lazy(() => TypedSetUncheckedUpdateManyWithoutLoggedExerciseNestedInputSchema).optional()
+}).strict();
+
+export const LoggedExerciseUncheckedUpdateManyWithoutLogInputSchema: z.ZodType<Prisma.LoggedExerciseUncheckedUpdateManyWithoutLogInput> = z.object({
+  id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  exerciseSlug: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 /////////////////////////////////////////
@@ -2314,6 +3599,192 @@ export const ExerciseFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.ExerciseFindU
   where: ExerciseWhereUniqueInputSchema,
 }).strict() ;
 
+export const LoggedExerciseFindFirstArgsSchema: z.ZodType<Prisma.LoggedExerciseFindFirstArgs> = z.object({
+  select: LoggedExerciseSelectSchema.optional(),
+  include: LoggedExerciseIncludeSchema.optional(),
+  where: LoggedExerciseWhereInputSchema.optional(),
+  orderBy: z.union([ LoggedExerciseOrderByWithRelationInputSchema.array(),LoggedExerciseOrderByWithRelationInputSchema ]).optional(),
+  cursor: LoggedExerciseWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ LoggedExerciseScalarFieldEnumSchema,LoggedExerciseScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const LoggedExerciseFindFirstOrThrowArgsSchema: z.ZodType<Prisma.LoggedExerciseFindFirstOrThrowArgs> = z.object({
+  select: LoggedExerciseSelectSchema.optional(),
+  include: LoggedExerciseIncludeSchema.optional(),
+  where: LoggedExerciseWhereInputSchema.optional(),
+  orderBy: z.union([ LoggedExerciseOrderByWithRelationInputSchema.array(),LoggedExerciseOrderByWithRelationInputSchema ]).optional(),
+  cursor: LoggedExerciseWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ LoggedExerciseScalarFieldEnumSchema,LoggedExerciseScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const LoggedExerciseFindManyArgsSchema: z.ZodType<Prisma.LoggedExerciseFindManyArgs> = z.object({
+  select: LoggedExerciseSelectSchema.optional(),
+  include: LoggedExerciseIncludeSchema.optional(),
+  where: LoggedExerciseWhereInputSchema.optional(),
+  orderBy: z.union([ LoggedExerciseOrderByWithRelationInputSchema.array(),LoggedExerciseOrderByWithRelationInputSchema ]).optional(),
+  cursor: LoggedExerciseWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ LoggedExerciseScalarFieldEnumSchema,LoggedExerciseScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const LoggedExerciseAggregateArgsSchema: z.ZodType<Prisma.LoggedExerciseAggregateArgs> = z.object({
+  where: LoggedExerciseWhereInputSchema.optional(),
+  orderBy: z.union([ LoggedExerciseOrderByWithRelationInputSchema.array(),LoggedExerciseOrderByWithRelationInputSchema ]).optional(),
+  cursor: LoggedExerciseWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict() ;
+
+export const LoggedExerciseGroupByArgsSchema: z.ZodType<Prisma.LoggedExerciseGroupByArgs> = z.object({
+  where: LoggedExerciseWhereInputSchema.optional(),
+  orderBy: z.union([ LoggedExerciseOrderByWithAggregationInputSchema.array(),LoggedExerciseOrderByWithAggregationInputSchema ]).optional(),
+  by: LoggedExerciseScalarFieldEnumSchema.array(),
+  having: LoggedExerciseScalarWhereWithAggregatesInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict() ;
+
+export const LoggedExerciseFindUniqueArgsSchema: z.ZodType<Prisma.LoggedExerciseFindUniqueArgs> = z.object({
+  select: LoggedExerciseSelectSchema.optional(),
+  include: LoggedExerciseIncludeSchema.optional(),
+  where: LoggedExerciseWhereUniqueInputSchema,
+}).strict() ;
+
+export const LoggedExerciseFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.LoggedExerciseFindUniqueOrThrowArgs> = z.object({
+  select: LoggedExerciseSelectSchema.optional(),
+  include: LoggedExerciseIncludeSchema.optional(),
+  where: LoggedExerciseWhereUniqueInputSchema,
+}).strict() ;
+
+export const TypedSetFindFirstArgsSchema: z.ZodType<Prisma.TypedSetFindFirstArgs> = z.object({
+  select: TypedSetSelectSchema.optional(),
+  include: TypedSetIncludeSchema.optional(),
+  where: TypedSetWhereInputSchema.optional(),
+  orderBy: z.union([ TypedSetOrderByWithRelationInputSchema.array(),TypedSetOrderByWithRelationInputSchema ]).optional(),
+  cursor: TypedSetWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ TypedSetScalarFieldEnumSchema,TypedSetScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const TypedSetFindFirstOrThrowArgsSchema: z.ZodType<Prisma.TypedSetFindFirstOrThrowArgs> = z.object({
+  select: TypedSetSelectSchema.optional(),
+  include: TypedSetIncludeSchema.optional(),
+  where: TypedSetWhereInputSchema.optional(),
+  orderBy: z.union([ TypedSetOrderByWithRelationInputSchema.array(),TypedSetOrderByWithRelationInputSchema ]).optional(),
+  cursor: TypedSetWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ TypedSetScalarFieldEnumSchema,TypedSetScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const TypedSetFindManyArgsSchema: z.ZodType<Prisma.TypedSetFindManyArgs> = z.object({
+  select: TypedSetSelectSchema.optional(),
+  include: TypedSetIncludeSchema.optional(),
+  where: TypedSetWhereInputSchema.optional(),
+  orderBy: z.union([ TypedSetOrderByWithRelationInputSchema.array(),TypedSetOrderByWithRelationInputSchema ]).optional(),
+  cursor: TypedSetWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ TypedSetScalarFieldEnumSchema,TypedSetScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const TypedSetAggregateArgsSchema: z.ZodType<Prisma.TypedSetAggregateArgs> = z.object({
+  where: TypedSetWhereInputSchema.optional(),
+  orderBy: z.union([ TypedSetOrderByWithRelationInputSchema.array(),TypedSetOrderByWithRelationInputSchema ]).optional(),
+  cursor: TypedSetWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict() ;
+
+export const TypedSetGroupByArgsSchema: z.ZodType<Prisma.TypedSetGroupByArgs> = z.object({
+  where: TypedSetWhereInputSchema.optional(),
+  orderBy: z.union([ TypedSetOrderByWithAggregationInputSchema.array(),TypedSetOrderByWithAggregationInputSchema ]).optional(),
+  by: TypedSetScalarFieldEnumSchema.array(),
+  having: TypedSetScalarWhereWithAggregatesInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict() ;
+
+export const TypedSetFindUniqueArgsSchema: z.ZodType<Prisma.TypedSetFindUniqueArgs> = z.object({
+  select: TypedSetSelectSchema.optional(),
+  include: TypedSetIncludeSchema.optional(),
+  where: TypedSetWhereUniqueInputSchema,
+}).strict() ;
+
+export const TypedSetFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.TypedSetFindUniqueOrThrowArgs> = z.object({
+  select: TypedSetSelectSchema.optional(),
+  include: TypedSetIncludeSchema.optional(),
+  where: TypedSetWhereUniqueInputSchema,
+}).strict() ;
+
+export const LogFindFirstArgsSchema: z.ZodType<Prisma.LogFindFirstArgs> = z.object({
+  select: LogSelectSchema.optional(),
+  include: LogIncludeSchema.optional(),
+  where: LogWhereInputSchema.optional(),
+  orderBy: z.union([ LogOrderByWithRelationInputSchema.array(),LogOrderByWithRelationInputSchema ]).optional(),
+  cursor: LogWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ LogScalarFieldEnumSchema,LogScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const LogFindFirstOrThrowArgsSchema: z.ZodType<Prisma.LogFindFirstOrThrowArgs> = z.object({
+  select: LogSelectSchema.optional(),
+  include: LogIncludeSchema.optional(),
+  where: LogWhereInputSchema.optional(),
+  orderBy: z.union([ LogOrderByWithRelationInputSchema.array(),LogOrderByWithRelationInputSchema ]).optional(),
+  cursor: LogWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ LogScalarFieldEnumSchema,LogScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const LogFindManyArgsSchema: z.ZodType<Prisma.LogFindManyArgs> = z.object({
+  select: LogSelectSchema.optional(),
+  include: LogIncludeSchema.optional(),
+  where: LogWhereInputSchema.optional(),
+  orderBy: z.union([ LogOrderByWithRelationInputSchema.array(),LogOrderByWithRelationInputSchema ]).optional(),
+  cursor: LogWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ LogScalarFieldEnumSchema,LogScalarFieldEnumSchema.array() ]).optional(),
+}).strict() ;
+
+export const LogAggregateArgsSchema: z.ZodType<Prisma.LogAggregateArgs> = z.object({
+  where: LogWhereInputSchema.optional(),
+  orderBy: z.union([ LogOrderByWithRelationInputSchema.array(),LogOrderByWithRelationInputSchema ]).optional(),
+  cursor: LogWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict() ;
+
+export const LogGroupByArgsSchema: z.ZodType<Prisma.LogGroupByArgs> = z.object({
+  where: LogWhereInputSchema.optional(),
+  orderBy: z.union([ LogOrderByWithAggregationInputSchema.array(),LogOrderByWithAggregationInputSchema ]).optional(),
+  by: LogScalarFieldEnumSchema.array(),
+  having: LogScalarWhereWithAggregatesInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict() ;
+
+export const LogFindUniqueArgsSchema: z.ZodType<Prisma.LogFindUniqueArgs> = z.object({
+  select: LogSelectSchema.optional(),
+  include: LogIncludeSchema.optional(),
+  where: LogWhereUniqueInputSchema,
+}).strict() ;
+
+export const LogFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.LogFindUniqueOrThrowArgs> = z.object({
+  select: LogSelectSchema.optional(),
+  include: LogIncludeSchema.optional(),
+  where: LogWhereUniqueInputSchema,
+}).strict() ;
+
 export const UserCreateArgsSchema: z.ZodType<Prisma.UserCreateArgs> = z.object({
   select: UserSelectSchema.optional(),
   include: UserIncludeSchema.optional(),
@@ -2534,4 +4005,142 @@ export const ExerciseUpdateManyArgsSchema: z.ZodType<Prisma.ExerciseUpdateManyAr
 
 export const ExerciseDeleteManyArgsSchema: z.ZodType<Prisma.ExerciseDeleteManyArgs> = z.object({
   where: ExerciseWhereInputSchema.optional(),
+}).strict() ;
+
+export const LoggedExerciseCreateArgsSchema: z.ZodType<Prisma.LoggedExerciseCreateArgs> = z.object({
+  select: LoggedExerciseSelectSchema.optional(),
+  include: LoggedExerciseIncludeSchema.optional(),
+  data: z.union([ LoggedExerciseCreateInputSchema,LoggedExerciseUncheckedCreateInputSchema ]),
+}).strict() ;
+
+export const LoggedExerciseUpsertArgsSchema: z.ZodType<Prisma.LoggedExerciseUpsertArgs> = z.object({
+  select: LoggedExerciseSelectSchema.optional(),
+  include: LoggedExerciseIncludeSchema.optional(),
+  where: LoggedExerciseWhereUniqueInputSchema,
+  create: z.union([ LoggedExerciseCreateInputSchema,LoggedExerciseUncheckedCreateInputSchema ]),
+  update: z.union([ LoggedExerciseUpdateInputSchema,LoggedExerciseUncheckedUpdateInputSchema ]),
+}).strict() ;
+
+export const LoggedExerciseCreateManyArgsSchema: z.ZodType<Prisma.LoggedExerciseCreateManyArgs> = z.object({
+  data: z.union([ LoggedExerciseCreateManyInputSchema,LoggedExerciseCreateManyInputSchema.array() ]),
+  skipDuplicates: z.boolean().optional(),
+}).strict() ;
+
+export const LoggedExerciseCreateManyAndReturnArgsSchema: z.ZodType<Prisma.LoggedExerciseCreateManyAndReturnArgs> = z.object({
+  data: z.union([ LoggedExerciseCreateManyInputSchema,LoggedExerciseCreateManyInputSchema.array() ]),
+  skipDuplicates: z.boolean().optional(),
+}).strict() ;
+
+export const LoggedExerciseDeleteArgsSchema: z.ZodType<Prisma.LoggedExerciseDeleteArgs> = z.object({
+  select: LoggedExerciseSelectSchema.optional(),
+  include: LoggedExerciseIncludeSchema.optional(),
+  where: LoggedExerciseWhereUniqueInputSchema,
+}).strict() ;
+
+export const LoggedExerciseUpdateArgsSchema: z.ZodType<Prisma.LoggedExerciseUpdateArgs> = z.object({
+  select: LoggedExerciseSelectSchema.optional(),
+  include: LoggedExerciseIncludeSchema.optional(),
+  data: z.union([ LoggedExerciseUpdateInputSchema,LoggedExerciseUncheckedUpdateInputSchema ]),
+  where: LoggedExerciseWhereUniqueInputSchema,
+}).strict() ;
+
+export const LoggedExerciseUpdateManyArgsSchema: z.ZodType<Prisma.LoggedExerciseUpdateManyArgs> = z.object({
+  data: z.union([ LoggedExerciseUpdateManyMutationInputSchema,LoggedExerciseUncheckedUpdateManyInputSchema ]),
+  where: LoggedExerciseWhereInputSchema.optional(),
+}).strict() ;
+
+export const LoggedExerciseDeleteManyArgsSchema: z.ZodType<Prisma.LoggedExerciseDeleteManyArgs> = z.object({
+  where: LoggedExerciseWhereInputSchema.optional(),
+}).strict() ;
+
+export const TypedSetCreateArgsSchema: z.ZodType<Prisma.TypedSetCreateArgs> = z.object({
+  select: TypedSetSelectSchema.optional(),
+  include: TypedSetIncludeSchema.optional(),
+  data: z.union([ TypedSetCreateInputSchema,TypedSetUncheckedCreateInputSchema ]),
+}).strict() ;
+
+export const TypedSetUpsertArgsSchema: z.ZodType<Prisma.TypedSetUpsertArgs> = z.object({
+  select: TypedSetSelectSchema.optional(),
+  include: TypedSetIncludeSchema.optional(),
+  where: TypedSetWhereUniqueInputSchema,
+  create: z.union([ TypedSetCreateInputSchema,TypedSetUncheckedCreateInputSchema ]),
+  update: z.union([ TypedSetUpdateInputSchema,TypedSetUncheckedUpdateInputSchema ]),
+}).strict() ;
+
+export const TypedSetCreateManyArgsSchema: z.ZodType<Prisma.TypedSetCreateManyArgs> = z.object({
+  data: z.union([ TypedSetCreateManyInputSchema,TypedSetCreateManyInputSchema.array() ]),
+  skipDuplicates: z.boolean().optional(),
+}).strict() ;
+
+export const TypedSetCreateManyAndReturnArgsSchema: z.ZodType<Prisma.TypedSetCreateManyAndReturnArgs> = z.object({
+  data: z.union([ TypedSetCreateManyInputSchema,TypedSetCreateManyInputSchema.array() ]),
+  skipDuplicates: z.boolean().optional(),
+}).strict() ;
+
+export const TypedSetDeleteArgsSchema: z.ZodType<Prisma.TypedSetDeleteArgs> = z.object({
+  select: TypedSetSelectSchema.optional(),
+  include: TypedSetIncludeSchema.optional(),
+  where: TypedSetWhereUniqueInputSchema,
+}).strict() ;
+
+export const TypedSetUpdateArgsSchema: z.ZodType<Prisma.TypedSetUpdateArgs> = z.object({
+  select: TypedSetSelectSchema.optional(),
+  include: TypedSetIncludeSchema.optional(),
+  data: z.union([ TypedSetUpdateInputSchema,TypedSetUncheckedUpdateInputSchema ]),
+  where: TypedSetWhereUniqueInputSchema,
+}).strict() ;
+
+export const TypedSetUpdateManyArgsSchema: z.ZodType<Prisma.TypedSetUpdateManyArgs> = z.object({
+  data: z.union([ TypedSetUpdateManyMutationInputSchema,TypedSetUncheckedUpdateManyInputSchema ]),
+  where: TypedSetWhereInputSchema.optional(),
+}).strict() ;
+
+export const TypedSetDeleteManyArgsSchema: z.ZodType<Prisma.TypedSetDeleteManyArgs> = z.object({
+  where: TypedSetWhereInputSchema.optional(),
+}).strict() ;
+
+export const LogCreateArgsSchema: z.ZodType<Prisma.LogCreateArgs> = z.object({
+  select: LogSelectSchema.optional(),
+  include: LogIncludeSchema.optional(),
+  data: z.union([ LogCreateInputSchema,LogUncheckedCreateInputSchema ]),
+}).strict() ;
+
+export const LogUpsertArgsSchema: z.ZodType<Prisma.LogUpsertArgs> = z.object({
+  select: LogSelectSchema.optional(),
+  include: LogIncludeSchema.optional(),
+  where: LogWhereUniqueInputSchema,
+  create: z.union([ LogCreateInputSchema,LogUncheckedCreateInputSchema ]),
+  update: z.union([ LogUpdateInputSchema,LogUncheckedUpdateInputSchema ]),
+}).strict() ;
+
+export const LogCreateManyArgsSchema: z.ZodType<Prisma.LogCreateManyArgs> = z.object({
+  data: z.union([ LogCreateManyInputSchema,LogCreateManyInputSchema.array() ]),
+  skipDuplicates: z.boolean().optional(),
+}).strict() ;
+
+export const LogCreateManyAndReturnArgsSchema: z.ZodType<Prisma.LogCreateManyAndReturnArgs> = z.object({
+  data: z.union([ LogCreateManyInputSchema,LogCreateManyInputSchema.array() ]),
+  skipDuplicates: z.boolean().optional(),
+}).strict() ;
+
+export const LogDeleteArgsSchema: z.ZodType<Prisma.LogDeleteArgs> = z.object({
+  select: LogSelectSchema.optional(),
+  include: LogIncludeSchema.optional(),
+  where: LogWhereUniqueInputSchema,
+}).strict() ;
+
+export const LogUpdateArgsSchema: z.ZodType<Prisma.LogUpdateArgs> = z.object({
+  select: LogSelectSchema.optional(),
+  include: LogIncludeSchema.optional(),
+  data: z.union([ LogUpdateInputSchema,LogUncheckedUpdateInputSchema ]),
+  where: LogWhereUniqueInputSchema,
+}).strict() ;
+
+export const LogUpdateManyArgsSchema: z.ZodType<Prisma.LogUpdateManyArgs> = z.object({
+  data: z.union([ LogUpdateManyMutationInputSchema,LogUncheckedUpdateManyInputSchema ]),
+  where: LogWhereInputSchema.optional(),
+}).strict() ;
+
+export const LogDeleteManyArgsSchema: z.ZodType<Prisma.LogDeleteManyArgs> = z.object({
+  where: LogWhereInputSchema.optional(),
 }).strict() ;
