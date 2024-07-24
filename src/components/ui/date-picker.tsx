@@ -3,12 +3,12 @@ import React, { useEffect, useState } from 'react'
 import { Popover } from './popover'
 import { PopoverContent, PopoverTrigger } from '@radix-ui/react-popover'
 import { CalendarIcon } from 'lucide-react'
-import { format } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 import { Calendar } from './calendar'
 import { Button } from './button'
 
 interface Props {
-    defaultDate?: Date
+    defaultDate?: Date | string
     onUpdate: (date: Date) => void
 }
 
@@ -17,7 +17,7 @@ const DatePicker = ({ onUpdate, defaultDate }: Props) => {
 
     useEffect(() => {
         if (defaultDate) {
-            setDate(defaultDate)
+            setDate(parseISO(defaultDate as string))
         }
     }, [])
 

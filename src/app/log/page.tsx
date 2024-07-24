@@ -1,30 +1,16 @@
-import React from 'react'
-import DatePicker from '@/components/ui/date-picker'
-import { redirect } from 'next/navigation'
 import { formatISO, parseISO } from 'date-fns'
-import { createOrGetLogOnDate } from '../actions/log'
+import { LoaderCircle } from 'lucide-react'
+import { redirect } from 'next/navigation'
+import React from 'react'
 
-interface Props {
-    searchParams: {
-        date?: string
-    }
-}
-
-const LogPage = async ({ searchParams }: Props) => {
-    const searchDate = parseISO(searchParams.date || new Date().toISOString())
-    const formattedDate = formatISO(searchDate, { representation: 'date' })
-    const redirectToDate = async (date: Date) => {
-        'use server'
-        redirect(`/log?date=${formatISO(date, { representation: 'date' })}`)
-    }
-    const log = await createOrGetLogOnDate(formattedDate)
+const LogPage = () => {
+    const date = formatISO(parseISO(new Date().toISOString()))
+    redirect(`/log/${formatISO(date, { representation: 'date' })}`)
 
     return (
-        <>
-            <DatePicker defaultDate={searchDate} onUpdate={redirectToDate} />
-            <p>{log && log.date}</p>
-        </>
-
+        <div className='w-full flex justify-center items-center'>
+            <LoaderCircle className='animate-spin w-20 h-20' />
+        </div>
     )
 }
 

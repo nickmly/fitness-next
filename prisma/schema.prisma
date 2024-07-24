@@ -62,7 +62,7 @@ model VerificationToken {
 }
 
 model Exercise {
-  slug             String   @unique
+  slug             String           @unique
   name             String
   force            String?
   level            String
@@ -73,11 +73,13 @@ model Exercise {
   instructions     String[]
   category         String
   images           String[]
+  LoggedExercise   LoggedExercise[]
 }
 
 model LoggedExercise {
   id           String     @unique @default(uuid())
   exerciseSlug String
+  exercise     Exercise?  @relation(fields: [exerciseSlug], references: [slug])
   logId        String?
   log          Log?       @relation(fields: [logId], references: [id])
   sets         TypedSet[]
