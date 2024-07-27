@@ -5,7 +5,6 @@ import { Button } from '../ui/button'
 import { LoaderCircle, SearchIcon, XIcon } from 'lucide-react'
 import { searchExercises } from '@/app/actions/exercise'
 import { Exercise } from '@prisma/client'
-import { useRouter } from 'next/navigation'
 import { createPortal } from 'react-dom'
 
 interface Props {
@@ -18,7 +17,6 @@ const ExerciseSearchModal = ({ close, onClickExercise }: Props) => {
     const [searchLoading, setSearchLoading] = useState(false)
     const debounceTimeout = useRef<NodeJS.Timeout | undefined>()
     const [foundExercises, setFoundExercises] = useState<Partial<Exercise>[]>([])
-    const router = useRouter()
 
     useEffect(() => {
         async function performSearch() {
