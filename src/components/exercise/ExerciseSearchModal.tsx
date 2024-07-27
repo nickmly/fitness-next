@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
-import { SearchIcon, XIcon } from 'lucide-react'
+import { LoaderCircle, SearchIcon, XIcon } from 'lucide-react'
 import { searchExercises } from '@/app/actions/exercise'
 import { Exercise } from '@prisma/client'
 import { useRouter } from 'next/navigation'
@@ -15,14 +15,17 @@ interface Props {
 
 const ExerciseSearchModal = ({ close, onClickExercise }: Props) => {
     const [searchTerm, setSearchTerm] = useState('')
+    const [searchLoading, setSearchLoading] = useState(false)
     const debounceTimeout = useRef<NodeJS.Timeout | undefined>()
     const [foundExercises, setFoundExercises] = useState<Partial<Exercise>[]>([])
     const router = useRouter()
 
     useEffect(() => {
         async function performSearch() {
+            setSearchLoading(true)
             const exercises = await searchExercises(searchTerm)
             setFoundExercises(exercises)
+            setSearchLoading(false)
         }
         if (debounceTimeout.current) {
             clearTimeout(debounceTimeout.current)
@@ -61,8 +64,12 @@ const ExerciseSearchModal = ({ close, onClickExercise }: Props) => {
                     end={<Button variant='clear' title='Close search' className='text-muted-foreground' onClick={() => closeSearch()}><XIcon /></Button>}
                 />
             </div>
-
-            {foundExercises.length > 0 &&
+            {searchLoading &&
+                <div className='flex w-full h-full justify-center items-center'>
+                    <LoaderCircle className='animate-spin w-20 h-20' />
+                </div>
+            }
+            {(!searchLoading && foundExercises.length > 0) &&
                 <div className='mt-5 flex flex-col gap-2 items-center w-full'>
                     {foundExercises.map(e => <Button variant='secondary' className='w-full max-w-[1000px] whitespace-normal' key={e.slug} onClick={() => onClick(e)}>{e.name}</Button>)}
                 </div>
