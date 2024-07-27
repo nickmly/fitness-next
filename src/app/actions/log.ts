@@ -7,7 +7,7 @@ export async function findOrCreateLogOnDate(date: string) {
     if (!session?.user?.id) {
         return
     }
-    const log = await prisma.log.findUnique({
+    const log = await prisma.log.findFirst({
         select: {
             date: true,
             userId: true,

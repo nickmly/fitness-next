@@ -2,7 +2,7 @@ import AuthenticatedActions from '@/components/navigation/AuthenticatedActions'
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 
-jest.mock('../components/navigation/AccountDropdown', () => {
+jest.mock('../../components/navigation/AccountDropdown', () => {
     const MockAccountDropdown = () => <div data-testid='account-dropdown' />
     return MockAccountDropdown
 })
