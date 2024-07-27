@@ -3,7 +3,6 @@ import { auth } from '@/auth'
 import prisma from '../../../prisma/client'
 
 export async function findOrCreateLogOnDate(date: string) {
-    console.log(date)
     const session = await auth()
     if (!session?.user?.id) {
         return
@@ -41,4 +40,11 @@ export async function findOrCreateLogOnDate(date: string) {
         })
     }
     return log
+}
+
+export async function addExerciseToLog(exerciseSlug: string, logId: string) {
+    const session = await auth()
+    if (!session?.user?.id) {
+        return
+    }
 }
