@@ -1,5 +1,6 @@
 import ExerciseSearchButton from '@/components/exercise/ExerciseSearchButton'
 import { SearchIcon } from 'lucide-react'
+import { redirect } from 'next/navigation'
 import React from 'react'
 
 
@@ -15,6 +16,10 @@ const ExerciseSearchPage = ({ children }: Props) => {
                 buttonIcon={<SearchIcon />}
                 buttonLabel='Search'
                 buttonTitle='Open search'
+                onClickExercise={async (e) => {
+                    'use server'
+                    redirect(`/exercises/${e.slug}`)
+                }}
             />
             {children}
         </div>

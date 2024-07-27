@@ -10,9 +10,10 @@ import { createPortal } from 'react-dom'
 
 interface Props {
     close: () => void
+    onClickExercise: (e: Partial<Exercise>) => void
 }
 
-const ExerciseSearchModal = ({ close }: Props) => {
+const ExerciseSearchModal = ({ close, onClickExercise }: Props) => {
     const [searchTerm, setSearchTerm] = useState('')
     const debounceTimeout = useRef<NodeJS.Timeout | undefined>()
     const [foundExercises, setFoundExercises] = useState<Partial<Exercise>[]>([])
@@ -41,8 +42,8 @@ const ExerciseSearchModal = ({ close }: Props) => {
         setSearchTerm('')
     }
 
-    const onClickExercise = (exercise: Partial<Exercise>) => {
-        router.push(`/exercises/${exercise.slug}`)
+    const onClick = (exercise: Partial<Exercise>) => {
+        onClickExercise(exercise)
         closeSearch()
     }
 
@@ -63,7 +64,7 @@ const ExerciseSearchModal = ({ close }: Props) => {
 
             {foundExercises.length > 0 &&
                 <div className='mt-5 flex flex-col gap-2 items-center w-full'>
-                    {foundExercises.map(e => <Button variant='secondary' className='w-full max-w-[1000px] whitespace-normal' key={e.slug} onClick={() => onClickExercise(e)}>{e.name}</Button>)}
+                    {foundExercises.map(e => <Button variant='secondary' className='w-full max-w-[1000px] whitespace-normal' key={e.slug} onClick={() => onClick(e)}>{e.name}</Button>)}
                 </div>
             }
         </div>, document.body)

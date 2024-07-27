@@ -4,15 +4,17 @@ import { Button, buttonVariants } from '../ui/button'
 import ExerciseSearchModal from './ExerciseSearchModal'
 import { cn } from '@/lib/utils'
 import { VariantProps } from 'class-variance-authority'
+import { Exercise } from '@prisma/client'
 
 interface Props extends VariantProps<typeof buttonVariants> {
     className?: string
     buttonTitle: string
     buttonLabel: string
     buttonIcon: React.ReactElement
+    onClickExercise: (e: Partial<Exercise>) => void
 }
 
-const ExerciseSearchButton = ({ variant, className, buttonTitle, buttonLabel, buttonIcon }: Props) => {
+const ExerciseSearchButton = ({ variant, className, buttonTitle, buttonLabel, buttonIcon, onClickExercise }: Props) => {
     const [isSearchOpen, setIsSearchOpen] = useState(false)
 
     const toggleSearch = (toggle: boolean) => {
@@ -26,7 +28,10 @@ const ExerciseSearchButton = ({ variant, className, buttonTitle, buttonLabel, bu
 
     return (
         isSearchOpen ?
-            <ExerciseSearchModal close={() => toggleSearch(false)} /> :
+            <ExerciseSearchModal
+                onClickExercise={(e) => onClickExercise(e)}
+                close={() => toggleSearch(false)}
+            /> :
             <Button variant={variant} className={cn(className, 'mb-5 flex gap-2')} title={buttonTitle} onClick={() => toggleSearch(true)}>
                 {buttonIcon}
                 {buttonLabel}

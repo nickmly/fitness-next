@@ -9,6 +9,7 @@ export async function findOrCreateLogOnDate(date: string) {
     }
     const log = await prisma.log.findFirst({
         select: {
+            id: true,
             date: true,
             userId: true,
             exercises: {
@@ -25,6 +26,7 @@ export async function findOrCreateLogOnDate(date: string) {
     if (!log) {
         return await prisma.log.create({
             select: {
+                id: true,
                 date: true,
                 userId: true,
                 exercises: {
@@ -47,5 +49,11 @@ export async function addExerciseToLog(exerciseSlug: string, logId: string) {
     if (!session?.user?.id) {
         return
     }
-
+    const loggedExercise = await prisma.loggedExercise.create({
+        data: {
+            exerciseSlug,
+            logId
+        }
+    })
+    return loggedExercise
 }

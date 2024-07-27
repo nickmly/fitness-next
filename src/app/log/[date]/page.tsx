@@ -1,8 +1,9 @@
 import React from 'react'
-import { findOrCreateLogOnDate } from '../../actions/log'
+import { addExerciseToLog, findOrCreateLogOnDate } from '../../actions/log'
 import LoggedExerciseCard from '../../../components/log/LoggedExerciseCard'
 import ExerciseSearchButton from '@/components/exercise/ExerciseSearchButton'
 import { PlusIcon } from 'lucide-react'
+import { revalidatePath } from 'next/cache'
 
 interface Props {
     params: {
@@ -25,6 +26,14 @@ const LogDatePage = async ({ params: { date } }: Props) => {
                     buttonIcon={<PlusIcon />}
                     buttonLabel='Add Exercise'
                     buttonTitle='Add Exercise'
+                    onClickExercise={async (e) => {
+                        'use server'
+                        if (log && e.slug) {
+                            await addExerciseToLog(e.slug, log.id)
+                            revalidatePath('/log/[date]', 'page')
+                        }
+
+                    }}
                 />
             </div>
         </>
