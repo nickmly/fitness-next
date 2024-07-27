@@ -57,3 +57,16 @@ export async function addExerciseToLog(exerciseSlug: string, logId: string) {
     })
     return loggedExercise
 }
+
+export async function deleteExerciseFromLog(loggedExerciseId: string) {
+    const session = await auth()
+    if (!session?.user?.id) {
+        return
+    }
+    await prisma.loggedExercise.delete({
+        where: {
+            id: loggedExerciseId
+        }
+    })
+    return true
+}

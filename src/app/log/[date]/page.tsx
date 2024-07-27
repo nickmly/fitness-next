@@ -18,7 +18,12 @@ const LogDatePage = async ({ params: { date } }: Props) => {
             <div className='flex flex-col gap-6'>
                 {log &&
                     <div className='flex flex-col gap-2 mt-4'>
-                        {log.exercises.map(e => <LoggedExerciseCard key={e.id} loggedExercise={e} />)}
+                        {log.exercises.map(e =>
+                            <LoggedExerciseCard
+                                key={e.id}
+                                loggedExercise={e}
+                            />
+                        )}
                     </div>
                 }
                 <ExerciseSearchButton
