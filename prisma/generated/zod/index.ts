@@ -923,24 +923,15 @@ export const LogOrderByWithRelationInputSchema: z.ZodType<Prisma.LogOrderByWithR
   exercises: z.lazy(() => LoggedExerciseOrderByRelationAggregateInputSchema).optional()
 }).strict();
 
-export const LogWhereUniqueInputSchema: z.ZodType<Prisma.LogWhereUniqueInput> = z.union([
-  z.object({
-    id: z.string().uuid(),
-    date: z.string()
-  }),
-  z.object({
-    id: z.string().uuid(),
-  }),
-  z.object({
-    date: z.string(),
-  }),
-])
+export const LogWhereUniqueInputSchema: z.ZodType<Prisma.LogWhereUniqueInput> = z.object({
+  id: z.string().uuid()
+})
 .and(z.object({
   id: z.string().uuid().optional(),
-  date: z.string().optional(),
   AND: z.union([ z.lazy(() => LogWhereInputSchema),z.lazy(() => LogWhereInputSchema).array() ]).optional(),
   OR: z.lazy(() => LogWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => LogWhereInputSchema),z.lazy(() => LogWhereInputSchema).array() ]).optional(),
+  date: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   userId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   user: z.union([ z.lazy(() => UserRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
   exercises: z.lazy(() => LoggedExerciseListRelationFilterSchema).optional()

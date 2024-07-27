@@ -1,5 +1,5 @@
 import React from 'react'
-import { formatISO } from 'date-fns'
+import { formatISO, parseISO } from 'date-fns'
 import { findOrCreateLogOnDate } from '../../actions/log'
 import LoggedExerciseCard from '../../../components/log/LoggedExerciseCard'
 interface Props {
@@ -9,7 +9,7 @@ interface Props {
 }
 
 const LogDatePage = async ({ params: { date } }: Props) => {
-    const formattedDate = formatISO(date, { representation: 'date' })
+    const formattedDate = formatISO(parseISO(date), { representation: 'date' })
     const log = await findOrCreateLogOnDate(formattedDate)
     return (
         <>

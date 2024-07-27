@@ -104,7 +104,7 @@ model TypedSet {
 
 model Log {
   id        String           @unique @default(uuid())
-  date      String           @unique
+  date      String
   user      User             @relation(fields: [userId], references: [id])
   userId    String
   exercises LoggedExercise[]
