@@ -1,7 +1,8 @@
 import React from 'react'
 import { findOrCreateLogOnDate } from '../../actions/log'
 import LoggedExerciseCard from '../../../components/log/LoggedExerciseCard'
-import { Button } from '@/components/ui/button'
+import ExerciseSearchButton from '@/components/exercise/ExerciseSearchButton'
+import { PlusIcon } from 'lucide-react'
 
 interface Props {
     params: {
@@ -19,7 +20,12 @@ const LogDatePage = async ({ params: { date } }: Props) => {
                         {log.exercises.map(e => <LoggedExerciseCard key={e.id} loggedExercise={e} />)}
                     </div>
                 }
-                <Button className='self-end'>Add Exercise</Button>
+                <ExerciseSearchButton
+                    className='self-end'
+                    buttonIcon={<PlusIcon />}
+                    buttonLabel='Add Exercise'
+                    buttonTitle='Add Exercise'
+                />
             </div>
         </>
     )
