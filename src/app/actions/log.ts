@@ -47,4 +47,5 @@ export async function addExerciseToLog(exerciseSlug: string, logId: string) {
     if (!session?.user?.id) {
         return
     }
+
 }

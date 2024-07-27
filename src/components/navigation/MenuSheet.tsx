@@ -1,6 +1,7 @@
 import React from 'react'
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import { Sheet, SheetClose, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { Dumbbell } from 'lucide-react'
+import CustomLink from '../ui/custom-link'
 
 const MenuSheet = () => {
     return (
@@ -10,7 +11,14 @@ const MenuSheet = () => {
                 <h1 className='text-2xl font-extrabold tracking-widest'>nextFitness</h1>
             </SheetTrigger>
             <SheetContent side='left'>
-                Test
+                <div className='flex flex-col gap-2 mt-5'>
+                    <SheetClose asChild>
+                        <CustomLink href='/log'>Today's Workout</CustomLink>
+                    </SheetClose>
+                    <SheetClose asChild>
+                        <CustomLink href='/exercises'>Exercise Database</CustomLink>
+                    </SheetClose>
+                </div>
             </SheetContent>
         </Sheet>
     )
