@@ -21,7 +21,7 @@ const MenuSheet = () => {
                 </SheetHeader>
                 <div className='flex flex-col gap-2 mt-5'>
                     <SheetClose asChild>
-                        <CustomLink href='/log'>Today's Workout</CustomLink>
+                        <CustomLink href='/log'>Today&apos;s Workout</CustomLink>
                     </SheetClose>
                     <SheetClose asChild>
                         <CustomLink href='/exercises'>Exercise Database</CustomLink>
