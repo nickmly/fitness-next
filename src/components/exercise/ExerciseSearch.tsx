@@ -12,7 +12,7 @@ import { createPortal } from 'react-dom'
 const ExerciseSearch = () => {
     const [searchTerm, setSearchTerm] = useState('')
     const debounceTimeout = useRef<NodeJS.Timeout | undefined>()
-    const [foundExercises, setFoundExercises] = useState<Exercise[]>([])
+    const [foundExercises, setFoundExercises] = useState<Partial<Exercise>[]>([])
     const [isSearchOpen, setIsSearchOpen] = useState(false)
     const router = useRouter()
 
@@ -43,7 +43,7 @@ const ExerciseSearch = () => {
         }
     }
 
-    const onClickExercise = (exercise: Exercise) => {
+    const onClickExercise = (exercise: Partial<Exercise>) => {
         toggleSearch(false)
         router.push(`/exercises/${exercise.slug}`)
     }
