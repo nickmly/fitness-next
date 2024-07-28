@@ -19,10 +19,10 @@ const LogLayout = async ({ children, params }: Props) => {
     }
 
     return (
-        <>
+        <div className='w-full max-w-screen-xl'>
             <DatePicker defaultDate={params.date} onUpdate={redirectToDate} />
             {children}
-        </>
+        </div>
     )
 }
 

@@ -63,7 +63,7 @@ const ExerciseSearchModal = ({ close, onClickExercise }: Props) => {
                 />
             </div>
             {searchLoading &&
-                <div className='flex w-full h-full justify-center items-center'>
+                <div className='flex w-full h-screen justify-center items-center'>
                     <LoaderCircle className='animate-spin w-20 h-20' />
                 </div>
             }

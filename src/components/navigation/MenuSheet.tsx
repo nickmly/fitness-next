@@ -12,7 +12,7 @@ const MenuSheet = () => {
             </SheetTrigger>
             <SheetContent side='left'>
                 <SheetHeader>
-                    <SheetTitle>
+                    <SheetTitle className='text-left'>
                         Dashboard
                     </SheetTitle>
                     <SheetDescription className='hidden'>

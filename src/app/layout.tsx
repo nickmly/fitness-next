@@ -19,7 +19,7 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <body className={notoSans.className}>
         <Navbar />
-        <main className="px-10 py-5">
+        <main className="flex justify-center m-5 lg:mx-10 ">
           {children}
         </main>
       </body>
