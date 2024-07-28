@@ -1,11 +1,11 @@
-import { formatISO, parseISO } from 'date-fns'
+import { getDateWithoutTime } from '@/utils/date'
 import { LoaderCircle } from 'lucide-react'
 import { redirect } from 'next/navigation'
 import React from 'react'
 
 const LogPage = () => {
-    const date = formatISO(parseISO(new Date().toISOString()))
-    redirect(`/log/${formatISO(date, { representation: 'date' })}`)
+    const date = getDateWithoutTime(new Date())
+    redirect(`/log/${date}`)
 
     return (
         <div className='w-full flex justify-center items-center'>

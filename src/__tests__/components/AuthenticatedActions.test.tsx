@@ -7,7 +7,7 @@ jest.mock('../../components/navigation/AccountDropdown', () => {
     return MockAccountDropdown
 })
 
-jest.mock("next/navigation", () => ({
+jest.mock('next/navigation', () => ({
     useRouter() {
         return jest.fn()
     }

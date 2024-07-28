@@ -13,6 +13,13 @@ interface Props {
 
 const LogDatePage = async ({ params: { date } }: Props) => {
     const log = await findOrCreateLogOnDate(date)
+    if (!log) {
+        return (
+            <>
+                <p>You must be signed in to see logs</p>
+            </>
+        )
+    }
     return (
         <>
             <div className='flex flex-col gap-6'>
