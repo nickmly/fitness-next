@@ -18,7 +18,7 @@ const config: Config = {
       '<rootDir>/__tests__/mocks/next-auth-providers-credentials.ts',
     'next-auth': '<rootDir>/__tests__/mocks/next-auth.ts',
   },
-  testMatch: ['**/__tests__/**/*.test.ts?(x)'],
+  testMatch: ['**/**/*.test.ts?(x)'],
   // Add more setup options before each test is run
   // setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
 }

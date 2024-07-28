@@ -1,4 +1,4 @@
-import { getDateWithoutTime } from '../../utils/date'
+import { getDateWithoutTime } from './date'
 
 describe('date', () => {
     it('should format date without time', () => {
