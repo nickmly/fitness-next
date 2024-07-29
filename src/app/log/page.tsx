@@ -1,17 +1,10 @@
+'use client'
 import { getDateWithoutTime } from '@/utils/date'
-import { LoaderCircle } from 'lucide-react'
-import { redirect } from 'next/navigation'
-import React from 'react'
+import { useRouter } from 'next/navigation'
 
 const LogPage = () => {
     const date = getDateWithoutTime(new Date())
-    redirect(`/log/${date}`)
-
-    return (
-        <div className='w-full flex justify-center items-center'>
-            <LoaderCircle className='animate-spin w-20 h-20' />
-        </div>
-    )
+    useRouter().replace(`/log/${date}`)
 }
 
 export default LogPage
