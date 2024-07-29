@@ -4,6 +4,7 @@ import LoggedExerciseCard from '../../../components/log/LoggedExerciseCard'
 import ExerciseSearchButton from '@/components/exercise/ExerciseSearchButton'
 import { PlusIcon } from 'lucide-react'
 import { revalidatePath } from 'next/cache'
+import { Accordion } from '@/components/ui/accordion'
 
 interface Props {
     params: {
@@ -24,14 +25,14 @@ const LogDatePage = async ({ params: { date } }: Props) => {
         <>
             <div className='flex flex-col gap-6'>
                 {log &&
-                    <div className='flex flex-col gap-2 mt-4'>
+                    <Accordion className='flex flex-col gap-2 mt-4' type='single' collapsible>
                         {log.exercises.map(e =>
                             <LoggedExerciseCard
                                 key={e.id}
                                 loggedExercise={e}
                             />
                         )}
-                    </div>
+                    </Accordion>
                 }
                 <ExerciseSearchButton
                     className='self-end'

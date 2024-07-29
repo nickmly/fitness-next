@@ -14,7 +14,8 @@ export async function findOrCreateLogOnDate(date: string) {
             userId: true,
             exercises: {
                 include: {
-                    exercise: true
+                    exercise: true,
+                    sets: true
                 }
             }
         },
@@ -31,7 +32,8 @@ export async function findOrCreateLogOnDate(date: string) {
                 userId: true,
                 exercises: {
                     include: {
-                        exercise: true
+                        exercise: true,
+                        sets: true
                     }
                 }
             },

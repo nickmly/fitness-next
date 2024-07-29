@@ -5,17 +5,19 @@ import { LoaderCircle } from 'lucide-react'
 
 interface Props {
     className?: string
+    title: string
     performAction: () => Promise<void>
     children?: React.ReactNode
 }
 
-const LoggedExerciseActionButton = ({ className, performAction, children }: Props) => {
+const LoggedExerciseActionButton = ({ className, performAction, title, children }: Props) => {
     const [actionLoading, setActionLoading] = useState(false)
     return (
         <Button
             variant='edge'
             disabled={actionLoading}
             className={className}
+            title={title}
             onClick={async () => {
                 setActionLoading(true)
                 await performAction()
