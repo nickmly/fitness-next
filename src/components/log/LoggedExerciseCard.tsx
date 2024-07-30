@@ -44,7 +44,7 @@ const LoggedExerciseCard = ({ loggedExercise, deleteExercise, createSet }: Props
           />
         }
         {!showSetForm && loggedExercise.sets.map(s =>
-          <div className='px-4 py-2'>
+          <div key={s.id} className='px-4 py-2'>
             <span className='text-xl mx-1'>{s.weight}</span>
             <span className='text-muted-foreground'>lbs</span>
             <span className='mx-2'>x</span>
