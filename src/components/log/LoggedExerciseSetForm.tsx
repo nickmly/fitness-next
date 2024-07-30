@@ -2,23 +2,27 @@
 import React from 'react'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '../ui/form'
+import { Form, FormField, FormItem, FormControl, FormMessage } from '../ui/form'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { useForm } from 'react-hook-form'
-import { TypedSetCreateInputSchema } from '../../../prisma/generated/zod'
 import { LoaderCircle, CheckIcon } from 'lucide-react'
 
-export type TypedSetFormValues = z.infer<typeof TypedSetCreateInputSchema>
+const formSchema = z.object({
+    weight: z.coerce.number(),
+    reps: z.coerce.number()
+})
+
+export type TypedSetFormValues = z.infer<typeof formSchema>
 
 interface Props {
     loading: boolean
-    createSet: (values: FormValues) => Promise<TypedSet>
+    createSet: (set: TypedSetFormValues) => Promise<void>
 }
 
 const LoggedExerciseSetForm = ({ createSet, loading }: Props) => {
     const form = useForm<TypedSetFormValues>({
-        resolver: zodResolver(TypedSetCreateInputSchema),
+        resolver: zodResolver(formSchema),
         defaultValues: {
             weight: 0,
             reps: 0
@@ -75,5 +79,4 @@ const LoggedExerciseSetForm = ({ createSet, loading }: Props) => {
         </Form>
     )
 }
-
 export default LoggedExerciseSetForm
