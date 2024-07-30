@@ -28,7 +28,6 @@ const LoggedExerciseSet = ({ loading, set, editSet, deleteSet }: Props) => {
                     {loading ? <LoaderCircle className='animate-spin w-4 h-4' /> : <TrashIcon className='w-4 h-4' />}
                 </Button>
             </div>
-
         </div>
     )
 }

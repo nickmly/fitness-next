@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/accordion"
 import LoggedExerciseSetForm, { TypedSetFormValues } from './LoggedExerciseSetForm'
 import LoggedExerciseSet from './LoggedExerciseSet'
+import { useSortedSets } from '@/hooks/useSortedSets'
 
 interface LoggedExerciseWithExercise extends LoggedExercise {
   exercise: Exercise | null
@@ -29,13 +30,14 @@ const LoggedExerciseCard = ({ loggedExercise, deleteExercise, createSet, updateS
   const [loading, setLoading] = useState(false)
   const [deleteSetLoading, setDeleteSetLoading] = useState<string>('')
   const [currentSetToEdit, setCurrentSetToEdit] = useState<TypedSet | null>(null)
+  const sortedSets = useSortedSets(loggedExercise.sets)
   return (
     <AccordionItem value={loggedExercise.id} className='bg-muted rounded-lg'>
       <AccordionTrigger className='px-4 py-2'>
         {loggedExercise.exercise?.name}
       </AccordionTrigger>
       <AccordionContent className='flex flex-col p-0'>
-        {showSetForm &&
+        {showSetForm ?
           <LoggedExerciseSetForm
             loading={loading}
             existingSet={currentSetToEdit}
@@ -56,47 +58,47 @@ const LoggedExerciseCard = ({ loggedExercise, deleteExercise, createSet, updateS
                 setCurrentSetToEdit(null)
               }
             }
-          />
-        }
-        {!showSetForm && loggedExercise.sets.map(s =>
-          <LoggedExerciseSet
-            loading={s.id === deleteSetLoading}
-            key={s.id}
-            set={s}
-            editSet={
-              () => {
-                setCurrentSetToEdit(s)
-                setShowSetForm(true)
-              }
-            }
-            deleteSet={
-              async () => {
-                setDeleteSetLoading(s.id)
-                await deleteSet(s.id)
-                setDeleteSetLoading('')
-              }
-            }
-          />
-        )}
-        {!showSetForm &&
-          <div className='flex w-full'>
-            <LoggedExerciseActionButton
-              title="Add set"
-              className='w-full hover:bg-green-600 rounded-r-none rounded-t-none'
-              performAction={async () => {
-                setShowSetForm(true)
-              }}>
-              <CirclePlusIcon className='w-4 h-4' />
-              <span className='ml-2'>Add set</span>
-            </LoggedExerciseActionButton>
-            <LoggedExerciseActionButton
-              title="Delete exercise"
-              className='w-full hover:bg-red-500 rounded-l-none rounded-t-none'
-              performAction={deleteExercise}>
-              <TrashIcon className='w-4 h-4' />
-              <span className='ml-2'>Delete exercise</span>
-            </LoggedExerciseActionButton>
-          </div>
+          /> :
+          <>
+            {sortedSets.map(s =>
+              <LoggedExerciseSet
+                loading={s.id === deleteSetLoading}
+                key={s.id}
+                set={s}
+                editSet={
+                  () => {
+                    setCurrentSetToEdit(s)
+                    setShowSetForm(true)
+                  }
+                }
+                deleteSet={
+                  async () => {
+                    setDeleteSetLoading(s.id)
+                    await deleteSet(s.id)
+                    setDeleteSetLoading('')
+                  }
+                }
+              />
+            )}
+            <div className='flex w-full'>
+              <LoggedExerciseActionButton
+                title="Add set"
+                className='w-full hover:bg-green-600 rounded-r-none rounded-t-none'
+                performAction={async () => {
+                  setShowSetForm(true)
+                }}>
+                <CirclePlusIcon className='w-4 h-4' />
+                <span className='ml-2'>Add set</span>
+              </LoggedExerciseActionButton>
+              <LoggedExerciseActionButton
+                title="Delete exercise"
+                className='w-full hover:bg-red-500 rounded-l-none rounded-t-none'
+                performAction={deleteExercise}>
+                <TrashIcon className='w-4 h-4' />
+                <span className='ml-2'>Delete exercise</span>
+              </LoggedExerciseActionButton>
+            </div>
+          </>
         }
       </AccordionContent>
     </AccordionItem>

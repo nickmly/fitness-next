@@ -88,6 +88,7 @@ enum SetType {
 
 model TypedSet {
   id               String          @unique @default(uuid())
+  created_at       DateTime
   type             SetType         @default(WEIGHT_REPS)
   loggedExercise   LoggedExercise? @relation(fields: [loggedExerciseId], references: [id])
   loggedExerciseId String?

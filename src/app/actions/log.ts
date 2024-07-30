@@ -74,13 +74,14 @@ export async function deleteExerciseFromLog(loggedExerciseId: string) {
     return true
 }
 
-export async function addSetToLoggedExercise(loggedExerciseId: string, set: Prisma.TypedSetCreateInput) {
+export async function addSetToLoggedExercise(loggedExerciseId: string, set: Partial<Prisma.TypedSetCreateInput>) {
     const session = await auth()
     if (!session?.user?.id) {
         return
     }
     return await prisma.typedSet.create({
         data: {
+            created_at: new Date(),
             loggedExerciseId,
             weight: set.weight,
             reps: set.reps,
