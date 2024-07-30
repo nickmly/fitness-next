@@ -1,14 +1,14 @@
+'use client'
 import { Exercise, LoggedExercise, TypedSet } from '@prisma/client'
-import React from 'react'
-import { TrashIcon, PencilIcon } from 'lucide-react'
+import React, { useState } from 'react'
+import { TrashIcon, CirclePlusIcon } from 'lucide-react'
 import LoggedExerciseActionButton from './LoggedExerciseActionButton'
-import { deleteExerciseFromLog } from '@/app/actions/log'
-import { revalidatePath } from 'next/cache'
 import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+import LoggedExerciseSetForm, { TypedSetFormValues } from './LoggedExerciseSetForm'
 
 interface LoggedExerciseWithExercise extends LoggedExercise {
   exercise: Exercise | null
@@ -17,37 +17,57 @@ interface LoggedExerciseWithExercise extends LoggedExercise {
 
 interface Props {
   loggedExercise: LoggedExerciseWithExercise
+  deleteExercise: () => Promise<void>
+  createSet: (set: TypedSetFormValues) => Promise<void>
 }
 
-const LoggedExerciseCard = ({ loggedExercise }: Props) => {
+const LoggedExerciseCard = ({ loggedExercise, deleteExercise, createSet }: Props) => {
+  const [showSetForm, setShowSetForm] = useState(false)
+  const [createSetLoading, setCreateSetLoading] = useState(false)
   return (
     <AccordionItem value={loggedExercise.id} className='bg-muted rounded-lg'>
       <AccordionTrigger className='px-4 py-2'>
         {loggedExercise.exercise?.name}
       </AccordionTrigger>
       <AccordionContent className='flex flex-col p-0'>
+        {showSetForm &&
+          <LoggedExerciseSetForm
+            loading={createSetLoading}
+            createSet={
+              async (set: TypedSetFormValues) => {
+                setCreateSetLoading(true)
+                await createSet(set)
+                setCreateSetLoading(false)
+                setShowSetForm(false)
+              }
+            }
+          />
+        }
+        {!showSetForm && loggedExercise.sets.map(s =>
+          <div className='px-4 py-2'>
+            <span className='text-xl mx-1'>{s.weight}</span>
+            <span className='text-muted-foreground'>lbs</span>
+            <span className='mx-2'>x</span>
+            <span className='text-xl mx-1'>{s.reps}</span>
+            <span className='text-muted-foreground'>reps</span>
+          </div>
+        )}
         <div className='self-end'>
           <LoggedExerciseActionButton
-            title="Edit exercise"
-            className='hover:bg-blue-500 rounded-none'
+            title="Add set"
+            className='hover:bg-green-600 rounded-none'
             performAction={async () => {
-              'use server'
-              console.log("TODO: route to edit page")
+              setShowSetForm(true)
             }}>
-            <PencilIcon className='w-4 h-4' />
+            <CirclePlusIcon className='w-4 h-4' />
           </LoggedExerciseActionButton>
           <LoggedExerciseActionButton
             title="Delete exercise"
             className='hover:bg-red-500 rounded-l-none rounded-t-none'
-            performAction={async () => {
-              'use server'
-              await deleteExerciseFromLog(loggedExercise.id)
-              revalidatePath('/log/[date]', 'page')
-            }}>
+            performAction={deleteExercise}>
             <TrashIcon className='w-4 h-4' />
           </LoggedExerciseActionButton>
         </div>
-
       </AccordionContent>
     </AccordionItem>
   )

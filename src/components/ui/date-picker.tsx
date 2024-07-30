@@ -37,7 +37,7 @@ const DatePicker = ({ onUpdate, defaultDate }: Props) => {
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent>
-                    <Calendar mode='single' selected={date} onSelect={setDate} className='mt-2 bg-background rounded-md border-2 border-muted' />
+                    <Calendar mode='single' selected={date} onSelect={setDate} className='mt-2 bg-background rounded-md border-2 border-muted z-50' />
                 </PopoverContent>
             </Popover>
         </>

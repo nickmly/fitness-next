@@ -1,10 +1,11 @@
 import React from 'react'
-import { addExerciseToLog, findOrCreateLogOnDate } from '../../actions/log'
+import { addExerciseToLog, deleteExerciseFromLog, findOrCreateLogOnDate, addSetToLoggedExercise } from '../../actions/log'
 import LoggedExerciseCard from '../../../components/log/LoggedExerciseCard'
 import ExerciseSearchButton from '@/components/exercise/ExerciseSearchButton'
 import { PlusIcon } from 'lucide-react'
 import { revalidatePath } from 'next/cache'
 import { Accordion } from '@/components/ui/accordion'
+import { TypedSetFormValues } from '@/components/log/LoggedExerciseSetForm'
 
 interface Props {
     params: {
@@ -30,6 +31,16 @@ const LogDatePage = async ({ params: { date } }: Props) => {
                             <LoggedExerciseCard
                                 key={e.id}
                                 loggedExercise={e}
+                                createSet={async (set: TypedSetFormValues) => {
+                                    'use server'
+                                    await addSetToLoggedExercise(e.id, set)
+                                    revalidatePath('/log/[date]', 'page')
+                                }}
+                                deleteExercise={async () => {
+                                    'use server'
+                                    await deleteExerciseFromLog(e.id)
+                                    revalidatePath('/log/[date]', 'page')
+                                }}
                             />
                         )}
                     </Accordion>

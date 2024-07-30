@@ -95,11 +95,11 @@ model TypedSet {
   type             SetType         @default(WEIGHT_REPS)
   loggedExercise   LoggedExercise? @relation(fields: [loggedExerciseId], references: [id])
   loggedExerciseId String?
-  weight           Int
-  reps             Int
-  distance         String
-  minutes          Int
-  seconds          Int
+  weight           Int?
+  reps             Int?
+  distance         String?
+  minutes          Int?
+  seconds          Int?
 }
 
 model Log {

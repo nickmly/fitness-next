@@ -1,6 +1,7 @@
 'use server'
 import { auth } from '@/auth'
 import prisma from '../../../prisma/client'
+import { Prisma, TypedSet } from '@prisma/client'
 
 export async function findOrCreateLogOnDate(date: string) {
     const session = await auth()
@@ -71,4 +72,20 @@ export async function deleteExerciseFromLog(loggedExerciseId: string) {
         }
     })
     return true
+}
+
+export async function addSetToLoggedExercise(loggedExerciseId: string, set: Prisma.TypedSetCreateInput) {
+    const session = await auth()
+    if (!session?.user?.id) {
+        return
+    }
+    return await prisma.typedSet.create({
+        data: {
+            loggedExerciseId,
+            weight: set.weight,
+            reps: set.reps,
+            distance: set.distance,
+            minutes: set.minutes
+        }
+    })
 }

@@ -146,11 +146,11 @@ export const TypedSetSchema = z.object({
   type: SetTypeSchema,
   id: z.string().uuid(),
   loggedExerciseId: z.string().nullable(),
-  weight: z.number().int(),
-  reps: z.number().int(),
-  distance: z.string(),
-  minutes: z.number().int(),
-  seconds: z.number().int(),
+  weight: z.number().int().nullable(),
+  reps: z.number().int().nullable(),
+  distance: z.string().nullable(),
+  minutes: z.number().int().nullable(),
+  seconds: z.number().int().nullable(),
 })
 
 export type TypedSet = z.infer<typeof TypedSetSchema>
@@ -836,11 +836,11 @@ export const TypedSetWhereInputSchema: z.ZodType<Prisma.TypedSetWhereInput> = z.
   id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   type: z.union([ z.lazy(() => EnumSetTypeFilterSchema),z.lazy(() => SetTypeSchema) ]).optional(),
   loggedExerciseId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-  weight: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
-  reps: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
-  distance: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  minutes: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
-  seconds: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
+  weight: z.union([ z.lazy(() => IntNullableFilterSchema),z.number() ]).optional().nullable(),
+  reps: z.union([ z.lazy(() => IntNullableFilterSchema),z.number() ]).optional().nullable(),
+  distance: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  minutes: z.union([ z.lazy(() => IntNullableFilterSchema),z.number() ]).optional().nullable(),
+  seconds: z.union([ z.lazy(() => IntNullableFilterSchema),z.number() ]).optional().nullable(),
   loggedExercise: z.union([ z.lazy(() => LoggedExerciseNullableRelationFilterSchema),z.lazy(() => LoggedExerciseWhereInputSchema) ]).optional().nullable(),
 }).strict();
 
@@ -848,11 +848,11 @@ export const TypedSetOrderByWithRelationInputSchema: z.ZodType<Prisma.TypedSetOr
   id: z.lazy(() => SortOrderSchema).optional(),
   type: z.lazy(() => SortOrderSchema).optional(),
   loggedExerciseId: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
-  weight: z.lazy(() => SortOrderSchema).optional(),
-  reps: z.lazy(() => SortOrderSchema).optional(),
-  distance: z.lazy(() => SortOrderSchema).optional(),
-  minutes: z.lazy(() => SortOrderSchema).optional(),
-  seconds: z.lazy(() => SortOrderSchema).optional(),
+  weight: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  reps: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  distance: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  minutes: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  seconds: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   loggedExercise: z.lazy(() => LoggedExerciseOrderByWithRelationInputSchema).optional()
 }).strict();
 
@@ -866,11 +866,11 @@ export const TypedSetWhereUniqueInputSchema: z.ZodType<Prisma.TypedSetWhereUniqu
   NOT: z.union([ z.lazy(() => TypedSetWhereInputSchema),z.lazy(() => TypedSetWhereInputSchema).array() ]).optional(),
   type: z.union([ z.lazy(() => EnumSetTypeFilterSchema),z.lazy(() => SetTypeSchema) ]).optional(),
   loggedExerciseId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-  weight: z.union([ z.lazy(() => IntFilterSchema),z.number().int() ]).optional(),
-  reps: z.union([ z.lazy(() => IntFilterSchema),z.number().int() ]).optional(),
-  distance: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  minutes: z.union([ z.lazy(() => IntFilterSchema),z.number().int() ]).optional(),
-  seconds: z.union([ z.lazy(() => IntFilterSchema),z.number().int() ]).optional(),
+  weight: z.union([ z.lazy(() => IntNullableFilterSchema),z.number().int() ]).optional().nullable(),
+  reps: z.union([ z.lazy(() => IntNullableFilterSchema),z.number().int() ]).optional().nullable(),
+  distance: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  minutes: z.union([ z.lazy(() => IntNullableFilterSchema),z.number().int() ]).optional().nullable(),
+  seconds: z.union([ z.lazy(() => IntNullableFilterSchema),z.number().int() ]).optional().nullable(),
   loggedExercise: z.union([ z.lazy(() => LoggedExerciseNullableRelationFilterSchema),z.lazy(() => LoggedExerciseWhereInputSchema) ]).optional().nullable(),
 }).strict());
 
@@ -878,11 +878,11 @@ export const TypedSetOrderByWithAggregationInputSchema: z.ZodType<Prisma.TypedSe
   id: z.lazy(() => SortOrderSchema).optional(),
   type: z.lazy(() => SortOrderSchema).optional(),
   loggedExerciseId: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
-  weight: z.lazy(() => SortOrderSchema).optional(),
-  reps: z.lazy(() => SortOrderSchema).optional(),
-  distance: z.lazy(() => SortOrderSchema).optional(),
-  minutes: z.lazy(() => SortOrderSchema).optional(),
-  seconds: z.lazy(() => SortOrderSchema).optional(),
+  weight: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  reps: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  distance: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  minutes: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  seconds: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   _count: z.lazy(() => TypedSetCountOrderByAggregateInputSchema).optional(),
   _avg: z.lazy(() => TypedSetAvgOrderByAggregateInputSchema).optional(),
   _max: z.lazy(() => TypedSetMaxOrderByAggregateInputSchema).optional(),
@@ -897,11 +897,11 @@ export const TypedSetScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.Type
   id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   type: z.union([ z.lazy(() => EnumSetTypeWithAggregatesFilterSchema),z.lazy(() => SetTypeSchema) ]).optional(),
   loggedExerciseId: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
-  weight: z.union([ z.lazy(() => IntWithAggregatesFilterSchema),z.number() ]).optional(),
-  reps: z.union([ z.lazy(() => IntWithAggregatesFilterSchema),z.number() ]).optional(),
-  distance: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
-  minutes: z.union([ z.lazy(() => IntWithAggregatesFilterSchema),z.number() ]).optional(),
-  seconds: z.union([ z.lazy(() => IntWithAggregatesFilterSchema),z.number() ]).optional(),
+  weight: z.union([ z.lazy(() => IntNullableWithAggregatesFilterSchema),z.number() ]).optional().nullable(),
+  reps: z.union([ z.lazy(() => IntNullableWithAggregatesFilterSchema),z.number() ]).optional().nullable(),
+  distance: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+  minutes: z.union([ z.lazy(() => IntNullableWithAggregatesFilterSchema),z.number() ]).optional().nullable(),
+  seconds: z.union([ z.lazy(() => IntNullableWithAggregatesFilterSchema),z.number() ]).optional().nullable(),
 }).strict();
 
 export const LogWhereInputSchema: z.ZodType<Prisma.LogWhereInput> = z.object({
@@ -1394,11 +1394,11 @@ export const LoggedExerciseUncheckedUpdateManyInputSchema: z.ZodType<Prisma.Logg
 export const TypedSetCreateInputSchema: z.ZodType<Prisma.TypedSetCreateInput> = z.object({
   id: z.string().uuid().optional(),
   type: z.lazy(() => SetTypeSchema).optional(),
-  weight: z.number().int(),
-  reps: z.number().int(),
-  distance: z.string(),
-  minutes: z.number().int(),
-  seconds: z.number().int(),
+  weight: z.number().int().optional().nullable(),
+  reps: z.number().int().optional().nullable(),
+  distance: z.string().optional().nullable(),
+  minutes: z.number().int().optional().nullable(),
+  seconds: z.number().int().optional().nullable(),
   loggedExercise: z.lazy(() => LoggedExerciseCreateNestedOneWithoutSetsInputSchema).optional()
 }).strict();
 
@@ -1406,21 +1406,21 @@ export const TypedSetUncheckedCreateInputSchema: z.ZodType<Prisma.TypedSetUnchec
   id: z.string().uuid().optional(),
   type: z.lazy(() => SetTypeSchema).optional(),
   loggedExerciseId: z.string().optional().nullable(),
-  weight: z.number().int(),
-  reps: z.number().int(),
-  distance: z.string(),
-  minutes: z.number().int(),
-  seconds: z.number().int()
+  weight: z.number().int().optional().nullable(),
+  reps: z.number().int().optional().nullable(),
+  distance: z.string().optional().nullable(),
+  minutes: z.number().int().optional().nullable(),
+  seconds: z.number().int().optional().nullable()
 }).strict();
 
 export const TypedSetUpdateInputSchema: z.ZodType<Prisma.TypedSetUpdateInput> = z.object({
   id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   type: z.union([ z.lazy(() => SetTypeSchema),z.lazy(() => EnumSetTypeFieldUpdateOperationsInputSchema) ]).optional(),
-  weight: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  reps: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  distance: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  minutes: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  seconds: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  weight: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  reps: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  distance: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  minutes: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  seconds: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   loggedExercise: z.lazy(() => LoggedExerciseUpdateOneWithoutSetsNestedInputSchema).optional()
 }).strict();
 
@@ -1428,43 +1428,43 @@ export const TypedSetUncheckedUpdateInputSchema: z.ZodType<Prisma.TypedSetUnchec
   id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   type: z.union([ z.lazy(() => SetTypeSchema),z.lazy(() => EnumSetTypeFieldUpdateOperationsInputSchema) ]).optional(),
   loggedExerciseId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  weight: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  reps: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  distance: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  minutes: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  seconds: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  weight: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  reps: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  distance: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  minutes: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  seconds: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const TypedSetCreateManyInputSchema: z.ZodType<Prisma.TypedSetCreateManyInput> = z.object({
   id: z.string().uuid().optional(),
   type: z.lazy(() => SetTypeSchema).optional(),
   loggedExerciseId: z.string().optional().nullable(),
-  weight: z.number().int(),
-  reps: z.number().int(),
-  distance: z.string(),
-  minutes: z.number().int(),
-  seconds: z.number().int()
+  weight: z.number().int().optional().nullable(),
+  reps: z.number().int().optional().nullable(),
+  distance: z.string().optional().nullable(),
+  minutes: z.number().int().optional().nullable(),
+  seconds: z.number().int().optional().nullable()
 }).strict();
 
 export const TypedSetUpdateManyMutationInputSchema: z.ZodType<Prisma.TypedSetUpdateManyMutationInput> = z.object({
   id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   type: z.union([ z.lazy(() => SetTypeSchema),z.lazy(() => EnumSetTypeFieldUpdateOperationsInputSchema) ]).optional(),
-  weight: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  reps: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  distance: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  minutes: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  seconds: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  weight: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  reps: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  distance: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  minutes: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  seconds: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const TypedSetUncheckedUpdateManyInputSchema: z.ZodType<Prisma.TypedSetUncheckedUpdateManyInput> = z.object({
   id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   type: z.union([ z.lazy(() => SetTypeSchema),z.lazy(() => EnumSetTypeFieldUpdateOperationsInputSchema) ]).optional(),
   loggedExerciseId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  weight: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  reps: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  distance: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  minutes: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  seconds: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  weight: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  reps: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  distance: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  minutes: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  seconds: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const LogCreateInputSchema: z.ZodType<Prisma.LogCreateInput> = z.object({
@@ -1930,17 +1930,6 @@ export const EnumSetTypeFilterSchema: z.ZodType<Prisma.EnumSetTypeFilter> = z.ob
   not: z.union([ z.lazy(() => SetTypeSchema),z.lazy(() => NestedEnumSetTypeFilterSchema) ]).optional(),
 }).strict();
 
-export const IntFilterSchema: z.ZodType<Prisma.IntFilter> = z.object({
-  equals: z.number().optional(),
-  in: z.number().array().optional(),
-  notIn: z.number().array().optional(),
-  lt: z.number().optional(),
-  lte: z.number().optional(),
-  gt: z.number().optional(),
-  gte: z.number().optional(),
-  not: z.union([ z.number(),z.lazy(() => NestedIntFilterSchema) ]).optional(),
-}).strict();
-
 export const LoggedExerciseNullableRelationFilterSchema: z.ZodType<Prisma.LoggedExerciseNullableRelationFilter> = z.object({
   is: z.lazy(() => LoggedExerciseWhereInputSchema).optional().nullable(),
   isNot: z.lazy(() => LoggedExerciseWhereInputSchema).optional().nullable()
@@ -2001,22 +1990,6 @@ export const EnumSetTypeWithAggregatesFilterSchema: z.ZodType<Prisma.EnumSetType
   _count: z.lazy(() => NestedIntFilterSchema).optional(),
   _min: z.lazy(() => NestedEnumSetTypeFilterSchema).optional(),
   _max: z.lazy(() => NestedEnumSetTypeFilterSchema).optional()
-}).strict();
-
-export const IntWithAggregatesFilterSchema: z.ZodType<Prisma.IntWithAggregatesFilter> = z.object({
-  equals: z.number().optional(),
-  in: z.number().array().optional(),
-  notIn: z.number().array().optional(),
-  lt: z.number().optional(),
-  lte: z.number().optional(),
-  gt: z.number().optional(),
-  gte: z.number().optional(),
-  not: z.union([ z.number(),z.lazy(() => NestedIntWithAggregatesFilterSchema) ]).optional(),
-  _count: z.lazy(() => NestedIntFilterSchema).optional(),
-  _avg: z.lazy(() => NestedFloatFilterSchema).optional(),
-  _sum: z.lazy(() => NestedIntFilterSchema).optional(),
-  _min: z.lazy(() => NestedIntFilterSchema).optional(),
-  _max: z.lazy(() => NestedIntFilterSchema).optional()
 }).strict();
 
 export const LogCountOrderByAggregateInputSchema: z.ZodType<Prisma.LogCountOrderByAggregateInput> = z.object({
@@ -2377,14 +2350,6 @@ export const EnumSetTypeFieldUpdateOperationsInputSchema: z.ZodType<Prisma.EnumS
   set: z.lazy(() => SetTypeSchema).optional()
 }).strict();
 
-export const IntFieldUpdateOperationsInputSchema: z.ZodType<Prisma.IntFieldUpdateOperationsInput> = z.object({
-  set: z.number().optional(),
-  increment: z.number().optional(),
-  decrement: z.number().optional(),
-  multiply: z.number().optional(),
-  divide: z.number().optional()
-}).strict();
-
 export const LoggedExerciseUpdateOneWithoutSetsNestedInputSchema: z.ZodType<Prisma.LoggedExerciseUpdateOneWithoutSetsNestedInput> = z.object({
   create: z.union([ z.lazy(() => LoggedExerciseCreateWithoutSetsInputSchema),z.lazy(() => LoggedExerciseUncheckedCreateWithoutSetsInputSchema) ]).optional(),
   connectOrCreate: z.lazy(() => LoggedExerciseCreateOrConnectWithoutSetsInputSchema).optional(),
@@ -2627,33 +2592,6 @@ export const NestedEnumSetTypeWithAggregatesFilterSchema: z.ZodType<Prisma.Neste
   _count: z.lazy(() => NestedIntFilterSchema).optional(),
   _min: z.lazy(() => NestedEnumSetTypeFilterSchema).optional(),
   _max: z.lazy(() => NestedEnumSetTypeFilterSchema).optional()
-}).strict();
-
-export const NestedIntWithAggregatesFilterSchema: z.ZodType<Prisma.NestedIntWithAggregatesFilter> = z.object({
-  equals: z.number().optional(),
-  in: z.number().array().optional(),
-  notIn: z.number().array().optional(),
-  lt: z.number().optional(),
-  lte: z.number().optional(),
-  gt: z.number().optional(),
-  gte: z.number().optional(),
-  not: z.union([ z.number(),z.lazy(() => NestedIntWithAggregatesFilterSchema) ]).optional(),
-  _count: z.lazy(() => NestedIntFilterSchema).optional(),
-  _avg: z.lazy(() => NestedFloatFilterSchema).optional(),
-  _sum: z.lazy(() => NestedIntFilterSchema).optional(),
-  _min: z.lazy(() => NestedIntFilterSchema).optional(),
-  _max: z.lazy(() => NestedIntFilterSchema).optional()
-}).strict();
-
-export const NestedFloatFilterSchema: z.ZodType<Prisma.NestedFloatFilter> = z.object({
-  equals: z.number().optional(),
-  in: z.number().array().optional(),
-  notIn: z.number().array().optional(),
-  lt: z.number().optional(),
-  lte: z.number().optional(),
-  gt: z.number().optional(),
-  gte: z.number().optional(),
-  not: z.union([ z.number(),z.lazy(() => NestedFloatFilterSchema) ]).optional(),
 }).strict();
 
 export const AccountCreateWithoutUserInputSchema: z.ZodType<Prisma.AccountCreateWithoutUserInput> = z.object({
@@ -3057,21 +2995,21 @@ export const LogCreateOrConnectWithoutExercisesInputSchema: z.ZodType<Prisma.Log
 export const TypedSetCreateWithoutLoggedExerciseInputSchema: z.ZodType<Prisma.TypedSetCreateWithoutLoggedExerciseInput> = z.object({
   id: z.string().uuid().optional(),
   type: z.lazy(() => SetTypeSchema).optional(),
-  weight: z.number().int(),
-  reps: z.number().int(),
-  distance: z.string(),
-  minutes: z.number().int(),
-  seconds: z.number().int()
+  weight: z.number().int().optional().nullable(),
+  reps: z.number().int().optional().nullable(),
+  distance: z.string().optional().nullable(),
+  minutes: z.number().int().optional().nullable(),
+  seconds: z.number().int().optional().nullable()
 }).strict();
 
 export const TypedSetUncheckedCreateWithoutLoggedExerciseInputSchema: z.ZodType<Prisma.TypedSetUncheckedCreateWithoutLoggedExerciseInput> = z.object({
   id: z.string().uuid().optional(),
   type: z.lazy(() => SetTypeSchema).optional(),
-  weight: z.number().int(),
-  reps: z.number().int(),
-  distance: z.string(),
-  minutes: z.number().int(),
-  seconds: z.number().int()
+  weight: z.number().int().optional().nullable(),
+  reps: z.number().int().optional().nullable(),
+  distance: z.string().optional().nullable(),
+  minutes: z.number().int().optional().nullable(),
+  seconds: z.number().int().optional().nullable()
 }).strict();
 
 export const TypedSetCreateOrConnectWithoutLoggedExerciseInputSchema: z.ZodType<Prisma.TypedSetCreateOrConnectWithoutLoggedExerciseInput> = z.object({
@@ -3169,11 +3107,11 @@ export const TypedSetScalarWhereInputSchema: z.ZodType<Prisma.TypedSetScalarWher
   id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   type: z.union([ z.lazy(() => EnumSetTypeFilterSchema),z.lazy(() => SetTypeSchema) ]).optional(),
   loggedExerciseId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-  weight: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
-  reps: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
-  distance: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  minutes: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
-  seconds: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
+  weight: z.union([ z.lazy(() => IntNullableFilterSchema),z.number() ]).optional().nullable(),
+  reps: z.union([ z.lazy(() => IntNullableFilterSchema),z.number() ]).optional().nullable(),
+  distance: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  minutes: z.union([ z.lazy(() => IntNullableFilterSchema),z.number() ]).optional().nullable(),
+  seconds: z.union([ z.lazy(() => IntNullableFilterSchema),z.number() ]).optional().nullable(),
 }).strict();
 
 export const LoggedExerciseCreateWithoutSetsInputSchema: z.ZodType<Prisma.LoggedExerciseCreateWithoutSetsInput> = z.object({
@@ -3453,41 +3391,41 @@ export const LoggedExerciseUncheckedUpdateManyWithoutExerciseInputSchema: z.ZodT
 export const TypedSetCreateManyLoggedExerciseInputSchema: z.ZodType<Prisma.TypedSetCreateManyLoggedExerciseInput> = z.object({
   id: z.string().uuid().optional(),
   type: z.lazy(() => SetTypeSchema).optional(),
-  weight: z.number().int(),
-  reps: z.number().int(),
-  distance: z.string(),
-  minutes: z.number().int(),
-  seconds: z.number().int()
+  weight: z.number().int().optional().nullable(),
+  reps: z.number().int().optional().nullable(),
+  distance: z.string().optional().nullable(),
+  minutes: z.number().int().optional().nullable(),
+  seconds: z.number().int().optional().nullable()
 }).strict();
 
 export const TypedSetUpdateWithoutLoggedExerciseInputSchema: z.ZodType<Prisma.TypedSetUpdateWithoutLoggedExerciseInput> = z.object({
   id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   type: z.union([ z.lazy(() => SetTypeSchema),z.lazy(() => EnumSetTypeFieldUpdateOperationsInputSchema) ]).optional(),
-  weight: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  reps: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  distance: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  minutes: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  seconds: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  weight: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  reps: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  distance: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  minutes: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  seconds: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const TypedSetUncheckedUpdateWithoutLoggedExerciseInputSchema: z.ZodType<Prisma.TypedSetUncheckedUpdateWithoutLoggedExerciseInput> = z.object({
   id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   type: z.union([ z.lazy(() => SetTypeSchema),z.lazy(() => EnumSetTypeFieldUpdateOperationsInputSchema) ]).optional(),
-  weight: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  reps: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  distance: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  minutes: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  seconds: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  weight: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  reps: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  distance: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  minutes: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  seconds: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const TypedSetUncheckedUpdateManyWithoutLoggedExerciseInputSchema: z.ZodType<Prisma.TypedSetUncheckedUpdateManyWithoutLoggedExerciseInput> = z.object({
   id: z.union([ z.string().uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   type: z.union([ z.lazy(() => SetTypeSchema),z.lazy(() => EnumSetTypeFieldUpdateOperationsInputSchema) ]).optional(),
-  weight: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  reps: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  distance: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  minutes: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  seconds: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  weight: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  reps: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  distance: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  minutes: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  seconds: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const LoggedExerciseCreateManyLogInputSchema: z.ZodType<Prisma.LoggedExerciseCreateManyLogInput> = z.object({
@@ -4282,7 +4220,7 @@ export const LoggedExerciseDeleteManyArgsSchema: z.ZodType<Prisma.LoggedExercise
 export const TypedSetCreateArgsSchema: z.ZodType<Prisma.TypedSetCreateArgs> = z.object({
   select: TypedSetSelectSchema.optional(),
   include: TypedSetIncludeSchema.optional(),
-  data: z.union([ TypedSetCreateInputSchema,TypedSetUncheckedCreateInputSchema ]),
+  data: z.union([ TypedSetCreateInputSchema,TypedSetUncheckedCreateInputSchema ]).optional(),
 }).strict() ;
 
 export const TypedSetUpsertArgsSchema: z.ZodType<Prisma.TypedSetUpsertArgs> = z.object({
