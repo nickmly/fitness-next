@@ -9,8 +9,8 @@ import { useForm } from 'react-hook-form'
 import { LoaderCircle, CheckIcon } from 'lucide-react'
 
 const formSchema = z.object({
-    weight: z.coerce.number(),
-    reps: z.coerce.number()
+    weight: z.coerce.number({ message: "Weight is required" }),
+    reps: z.coerce.number({ message: "Reps is required" })
 })
 
 export type TypedSetFormValues = z.infer<typeof formSchema>
