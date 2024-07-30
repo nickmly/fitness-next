@@ -9,6 +9,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 import LoggedExerciseSetForm, { TypedSetFormValues } from './LoggedExerciseSetForm'
+import LoggedExerciseSet from './LoggedExerciseSet'
 
 interface LoggedExerciseWithExercise extends LoggedExercise {
   exercise: Exercise | null
@@ -44,30 +45,28 @@ const LoggedExerciseCard = ({ loggedExercise, deleteExercise, createSet }: Props
           />
         }
         {!showSetForm && loggedExercise.sets.map(s =>
-          <div key={s.id} className='bg-black/20 border-b-2 border-muted-foreground/30 px-4 py-2'>
-            <span className='text-xl mx-1'>{s.weight}</span>
-            <span className='text-muted-foreground'>lbs</span>
-            <span className='mx-2'>x</span>
-            <span className='text-xl mx-1'>{s.reps}</span>
-            <span className='text-muted-foreground'>reps</span>
-          </div>
+          <LoggedExerciseSet key={s.id} set={s} />
         )}
-        <div className='self-end'>
-          <LoggedExerciseActionButton
-            title="Add set"
-            className='hover:bg-green-600 rounded-none'
-            performAction={async () => {
-              setShowSetForm(true)
-            }}>
-            <CirclePlusIcon className='w-4 h-4' />
-          </LoggedExerciseActionButton>
-          <LoggedExerciseActionButton
-            title="Delete exercise"
-            className='hover:bg-red-500 rounded-l-none rounded-t-none'
-            performAction={deleteExercise}>
-            <TrashIcon className='w-4 h-4' />
-          </LoggedExerciseActionButton>
-        </div>
+        {!showSetForm &&
+          <div className='flex w-full'>
+            <LoggedExerciseActionButton
+              title="Add set"
+              className='w-full hover:bg-green-600 rounded-r-none rounded-t-none'
+              performAction={async () => {
+                setShowSetForm(true)
+              }}>
+              <CirclePlusIcon className='w-4 h-4' />
+              <span className='ml-2'>Add set</span>
+            </LoggedExerciseActionButton>
+            <LoggedExerciseActionButton
+              title="Delete exercise"
+              className='w-full hover:bg-red-500 rounded-l-none rounded-t-none'
+              performAction={deleteExercise}>
+              <TrashIcon className='w-4 h-4' />
+              <span className='ml-2'>Delete exercise</span>
+            </LoggedExerciseActionButton>
+          </div>
+        }
       </AccordionContent>
     </AccordionItem>
   )
