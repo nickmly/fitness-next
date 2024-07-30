@@ -18,7 +18,7 @@ export type TypedSetFormValues = z.infer<typeof formSchema>
 
 interface Props {
     loading: boolean
-    existingSet?: TypedSet
+    existingSet: TypedSet | null
     createSet: (set: TypedSetFormValues) => Promise<void>
     updateSet: (set: TypedSet) => Promise<void>
 }

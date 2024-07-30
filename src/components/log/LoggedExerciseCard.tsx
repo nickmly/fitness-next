@@ -28,7 +28,7 @@ const LoggedExerciseCard = ({ loggedExercise, deleteExercise, createSet, updateS
   const [showSetForm, setShowSetForm] = useState(false)
   const [loading, setLoading] = useState(false)
   const [deleteSetLoading, setDeleteSetLoading] = useState<string>('')
-  const [currentSetToEdit, setCurrentSetToEdit] = useState<TypedSet>()
+  const [currentSetToEdit, setCurrentSetToEdit] = useState<TypedSet | null>(null)
   return (
     <AccordionItem value={loggedExercise.id} className='bg-muted rounded-lg'>
       <AccordionTrigger className='px-4 py-2'>
@@ -53,6 +53,7 @@ const LoggedExerciseCard = ({ loggedExercise, deleteExercise, createSet, updateS
                 await updateSet(set)
                 setLoading(false)
                 setShowSetForm(false)
+                setCurrentSetToEdit(null)
               }
             }
           />
