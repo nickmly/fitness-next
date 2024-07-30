@@ -6,6 +6,8 @@ import { PlusIcon } from 'lucide-react'
 import { revalidatePath } from 'next/cache'
 import { Accordion } from '@/components/ui/accordion'
 import { TypedSetFormValues } from '@/components/log/LoggedExerciseSetForm'
+import { TypedSet } from '@prisma/client'
+import { deleteSet, updateSet } from '@/app/actions/set'
 
 interface Props {
     params: {
@@ -36,6 +38,16 @@ const LogDatePage = async ({ params: { date } }: Props) => {
                                     await addSetToLoggedExercise(e.id, set)
                                     revalidatePath('/log/[date]', 'page')
                                 }}
+                                updateSet={async (set: TypedSet) => {
+                                    'use server'
+                                    await updateSet(set)
+                                    revalidatePath('/log/[date]', 'page')
+                                }}
+                                deleteSet={async (setId: string) => {
+                                    'use server'
+                                    await deleteSet(setId)
+                                    revalidatePath('/log/[date]', 'page')
+                                }}
                                 deleteExercise={async () => {
                                     'use server'
                                     await deleteExerciseFromLog(e.id)
@@ -56,7 +68,6 @@ const LogDatePage = async ({ params: { date } }: Props) => {
                             await addExerciseToLog(e.slug, log.id)
                             revalidatePath('/log/[date]', 'page')
                         }
-
                     }}
                 />
             </div>

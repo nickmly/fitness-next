@@ -7,6 +7,7 @@ import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { useForm } from 'react-hook-form'
 import { LoaderCircle, CheckIcon } from 'lucide-react'
+import { TypedSet } from '@prisma/client'
 
 const formSchema = z.object({
     weight: z.coerce.number({ message: 'Weight is required' }),
@@ -17,21 +18,34 @@ export type TypedSetFormValues = z.infer<typeof formSchema>
 
 interface Props {
     loading: boolean
+    existingSet?: TypedSet
     createSet: (set: TypedSetFormValues) => Promise<void>
+    updateSet: (set: TypedSet) => Promise<void>
 }
 
-const LoggedExerciseSetForm = ({ createSet, loading }: Props) => {
+const LoggedExerciseSetForm = ({ loading, existingSet, createSet, updateSet }: Props) => {
     const form = useForm<TypedSetFormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            weight: 0,
-            reps: 0
+            weight: existingSet?.weight || 0,
+            reps: existingSet?.reps || 0
         }
     })
 
+    const handleSubmit = (values: TypedSetFormValues) => {
+        if (existingSet) {
+            updateSet({
+                ...existingSet,
+                ...values
+            })
+        } else {
+            createSet(values)
+        }
+    }
+
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(createSet)} className='flex gap-2 justify-between items-center p-6'>
+            <form onSubmit={form.handleSubmit(handleSubmit)} className='flex gap-2 justify-between items-center p-6'>
                 <div className='flex-[2] flex gap-2'>
                     <FormField
                         control={form.control}

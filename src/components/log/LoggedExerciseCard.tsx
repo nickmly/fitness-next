@@ -20,11 +20,15 @@ interface Props {
   loggedExercise: LoggedExerciseWithExercise
   deleteExercise: () => Promise<void>
   createSet: (set: TypedSetFormValues) => Promise<void>
+  updateSet: (set: TypedSet) => Promise<void>
+  deleteSet: (setId: string) => Promise<void>
 }
 
-const LoggedExerciseCard = ({ loggedExercise, deleteExercise, createSet }: Props) => {
+const LoggedExerciseCard = ({ loggedExercise, deleteExercise, createSet, updateSet, deleteSet }: Props) => {
   const [showSetForm, setShowSetForm] = useState(false)
-  const [createSetLoading, setCreateSetLoading] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [deleteSetLoading, setDeleteSetLoading] = useState<string>('')
+  const [currentSetToEdit, setCurrentSetToEdit] = useState<TypedSet>()
   return (
     <AccordionItem value={loggedExercise.id} className='bg-muted rounded-lg'>
       <AccordionTrigger className='px-4 py-2'>
@@ -33,19 +37,45 @@ const LoggedExerciseCard = ({ loggedExercise, deleteExercise, createSet }: Props
       <AccordionContent className='flex flex-col p-0'>
         {showSetForm &&
           <LoggedExerciseSetForm
-            loading={createSetLoading}
+            loading={loading}
+            existingSet={currentSetToEdit}
             createSet={
               async (set: TypedSetFormValues) => {
-                setCreateSetLoading(true)
+                setLoading(true)
                 await createSet(set)
-                setCreateSetLoading(false)
+                setLoading(false)
+                setShowSetForm(false)
+              }
+            }
+            updateSet={
+              async (set: TypedSet) => {
+                setLoading(true)
+                await updateSet(set)
+                setLoading(false)
                 setShowSetForm(false)
               }
             }
           />
         }
         {!showSetForm && loggedExercise.sets.map(s =>
-          <LoggedExerciseSet key={s.id} set={s} />
+          <LoggedExerciseSet
+            loading={s.id === deleteSetLoading}
+            key={s.id}
+            set={s}
+            editSet={
+              () => {
+                setCurrentSetToEdit(s)
+                setShowSetForm(true)
+              }
+            }
+            deleteSet={
+              async () => {
+                setDeleteSetLoading(s.id)
+                await deleteSet(s.id)
+                setDeleteSetLoading('')
+              }
+            }
+          />
         )}
         {!showSetForm &&
           <div className='flex w-full'>

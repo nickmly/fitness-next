@@ -1,7 +1,7 @@
 'use server'
 import { auth } from '@/auth'
 import prisma from '../../../prisma/client'
-import { Prisma, TypedSet } from '@prisma/client'
+import { Prisma } from '@prisma/client'
 
 export async function findOrCreateLogOnDate(date: string) {
     const session = await auth()
@@ -89,3 +89,4 @@ export async function addSetToLoggedExercise(loggedExerciseId: string, set: Pris
         }
     })
 }
+
