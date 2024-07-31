@@ -2,7 +2,7 @@
 import React from 'react'
 import DatePicker from '../../../components/ui/date-picker'
 import { redirect } from 'next/navigation'
-import { formatISO, parseISO } from 'date-fns'
+import { formatISO } from 'date-fns'
 
 
 interface Props {

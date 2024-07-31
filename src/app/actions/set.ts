@@ -5,27 +5,37 @@ import prisma from "../../../prisma/client"
 export async function updateSet(set: TypedSet) {
     const session = await auth()
     if (!session?.user?.id) {
-        return
+        return false
     }
-    return await prisma.typedSet.update({
-        where: {
-            id: set.id
-        },
-        data: {
-            ...set
-        }
-    })
+    try {
+        return await prisma.typedSet.update({
+            where: {
+                id: set.id
+            },
+            data: {
+                ...set
+            }
+        })
+    }
+    catch (e) {
+        return false
+    }
 }
 
 export async function deleteSet(setId: string) {
     const session = await auth()
     if (!session?.user?.id) {
-        return
+        return false
     }
-    await prisma.typedSet.delete({
-        where: {
-            id: setId
-        }
-    })
-    return true
+    try {
+        await prisma.typedSet.delete({
+            where: {
+                id: setId
+            }
+        })
+        return true
+    }
+    catch (e) {
+        return false
+    }
 }

@@ -35,23 +35,27 @@ const LogDatePage = async ({ params: { date } }: Props) => {
                                 loggedExercise={e}
                                 createSet={async (set: TypedSetFormValues) => {
                                     'use server'
-                                    await addSetToLoggedExercise(e.id, set)
+                                    const result = await addSetToLoggedExercise(e.id, set)
                                     revalidatePath('/log/[date]', 'page')
+                                    return result
                                 }}
                                 updateSet={async (set: TypedSet) => {
                                     'use server'
-                                    await updateSet(set)
+                                    const result = await updateSet(set)
                                     revalidatePath('/log/[date]', 'page')
+                                    return result
                                 }}
                                 deleteSet={async (setId: string) => {
                                     'use server'
-                                    await deleteSet(setId)
+                                    const result = await deleteSet(setId)
                                     revalidatePath('/log/[date]', 'page')
+                                    return result
                                 }}
                                 deleteExercise={async () => {
                                     'use server'
-                                    await deleteExerciseFromLog(e.id)
+                                    const result = await deleteExerciseFromLog(e.id)
                                     revalidatePath('/log/[date]', 'page')
+                                    return result
                                 }}
                             />
                         )}
@@ -65,8 +69,9 @@ const LogDatePage = async ({ params: { date } }: Props) => {
                     onClickExercise={async (e) => {
                         'use server'
                         if (log && e.slug) {
-                            await addExerciseToLog(e.slug, log.id)
+                            const result = await addExerciseToLog(e.slug, log.id)
                             revalidatePath('/log/[date]', 'page')
+                            return result
                         }
                     }}
                 />

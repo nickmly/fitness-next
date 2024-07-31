@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Noto_Sans } from "next/font/google";
 import "./globals.css";
 import Navbar from "../components/navigation/Navbar";
+import { Toaster } from "@/components/ui/toaster";
 
 const notoSans = Noto_Sans({ subsets: ["latin"] });
 
@@ -22,6 +23,7 @@ export default function RootLayout({
         <main className="flex justify-center m-5 lg:mx-10 ">
           {children}
         </main>
+        <Toaster />
       </body>
     </html>
   );
