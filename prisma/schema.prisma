@@ -94,7 +94,7 @@ model TypedSet {
   loggedExerciseId String?
   weight           Int?
   reps             Int?
-  distance         Int?
+  distance         Float?
   minutes          Int?
   seconds          Int?
 }

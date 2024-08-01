@@ -16,9 +16,9 @@ const weightRepsFormSchema = z.object({
 })
 
 const timeDistanceFormSchema = z.object({
-    minutes: z.coerce.number({ message: 'Minutes are required' }).min(0).max(999),
-    seconds: z.coerce.number({ message: 'Seconds are required' }).min(0).max(999),
-    distance: z.coerce.number({ message: 'Distance is required' }).min(0).max(999),
+    minutes: z.coerce.number({ message: 'Minutes are required' }).min(0).max(60),
+    seconds: z.coerce.number({ message: 'Seconds are required' }).min(0).max(59),
+    distance: z.coerce.number({ message: 'Distance is required' }).multipleOf(0.1).min(0).max(999),
 })
 
 export type WeightRepsSetFormValues = z.infer<typeof weightRepsFormSchema>
@@ -143,8 +143,9 @@ const LoggedExerciseSetForm = ({ loading, existingSet, createSet, updateSet }: P
                                                 className='[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none'
                                                 type='number'
                                                 min='0'
+                                                step='0.1'
                                                 {...field}
-                                                onChange={event => field.onChange(parseInt(event.target.value))}
+                                                onChange={event => field.onChange(parseFloat(event.target.value))}
                                                 end={<span className='p-1'>km</span>}
                                             />
                                         </FormControl>
