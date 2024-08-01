@@ -15,7 +15,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const End = end
     return (
       <div className={cn("w-full relative h-10", containerClassName)}>
-        <div className="flex absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground w-6 h-6">
+        <div className="flex absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground w-6 h-6 pointer-events-none">
           {Start}
         </div>
         <input
@@ -29,7 +29,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           {...props}
         />
-        <div className="flex absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground">
+        <div className="flex absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none">
           {End}
         </div>
       </div>
