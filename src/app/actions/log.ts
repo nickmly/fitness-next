@@ -100,10 +100,12 @@ export async function addSetToLoggedExercise(loggedExerciseId: string, set: Part
             data: {
                 created_at: new Date(),
                 loggedExerciseId,
+                type: set.type,
                 weight: set.weight,
                 reps: set.reps,
                 distance: set.distance,
-                minutes: set.minutes
+                minutes: set.minutes,
+                seconds: set.seconds
             }
         })
         return true

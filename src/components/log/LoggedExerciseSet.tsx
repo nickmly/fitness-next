@@ -2,6 +2,7 @@ import { TypedSet } from '@prisma/client'
 import React from 'react'
 import { Button } from '../ui/button'
 import { LoaderCircle, PencilIcon, TrashIcon } from 'lucide-react'
+import { padNumber } from '@/utils/padNumber'
 
 interface Props {
     loading: boolean
@@ -13,13 +14,24 @@ interface Props {
 const LoggedExerciseSet = ({ loading, set, editSet, deleteSet }: Props) => {
     return (
         <div className='bg-black/20 border-b-2 border-muted-foreground/30 flex justify-between'>
-            <div className='px-4 py-2'>
-                <span className='text-xl mx-1'>{set.weight}</span>
-                <span className='text-muted-foreground'>lbs</span>
-                <span className='mx-2'>x</span>
-                <span className='text-xl mx-1'>{set.reps}</span>
-                <span className='text-muted-foreground'>reps</span>
-            </div>
+            {set.type === 'WEIGHT_REPS' &&
+                <div className='px-4 py-2'>
+                    <span className='text-xl mx-1'>{set.weight}</span>
+                    <span className='text-muted-foreground'>lbs</span>
+                    <span className='mx-2'>x</span>
+                    <span className='text-xl mx-1'>{set.reps}</span>
+                    <span className='text-muted-foreground'>reps</span>
+                </div>
+            }
+            {set.type === 'TIME_DISTANCE' &&
+                <div className='px-4 py-2'>
+                    <span className='text-xl mx-1'>{set.distance}</span>
+                    <span className='text-muted-foreground'>km</span>
+                    <span className='mx-2'>x</span>
+                    <span className='text-xl mx-1'>{padNumber(set.minutes || 0)}:{padNumber(set.seconds || 0)}</span>
+                    <span className='text-muted-foreground'>minutes</span>
+                </div>
+            }
             <div className='flex'>
                 <Button title='Edit set' variant='edge' className='hover:bg-blue-500 rounded-none' onClick={() => editSet()}>
                     <PencilIcon className='w-4 h-4' />
