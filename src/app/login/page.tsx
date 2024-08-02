@@ -25,7 +25,8 @@ const LoginPage = async () => {
         redirect("/")
     }
     return (
-        <div className='flex flex-col gap-2'>
+        <div className='flex flex-col gap-2 bg-muted p-6 rounded-lg'>
+            <h1 className='text-2xl text-center font-bold mb-6'>Login</h1>
             {Object.values(providerMap).map((provider) => (
                 <form
                     key={provider.id}
@@ -52,7 +53,7 @@ const LoginPage = async () => {
                 >
                     <Button type='submit' className='flex gap-2'>
                         {renderProviderIcon(provider.id)}
-                        <span>Sign in with {provider.name}</span>
+                        <span>Login with {provider.name}</span>
                     </Button>
                 </form>
             ))}
