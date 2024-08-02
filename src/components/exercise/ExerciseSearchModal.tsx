@@ -59,7 +59,7 @@ const ExerciseSearchModal = ({ close, onClickExercise }: Props) => {
                     onChange={(event) => setSearchTerm(event.target.value)}
                     placeholder='Search for an exercise'
                     start={<SearchIcon />}
-                    end={<Button variant='clear' title='Close search' className='text-muted-foreground' onClick={() => closeSearch()}><XIcon /></Button>}
+                    end={<Button variant='clear' title='Close search' className='text-muted-foreground pointer-events-auto' onClick={() => closeSearch()}><XIcon /></Button>}
                 />
             </div>
             {searchLoading &&
