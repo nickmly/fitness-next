@@ -14,7 +14,7 @@ describe('ExerciseSearchButton', () => {
                 buttonIcon={<div />}
                 buttonTitle='title'
                 buttonLabel='label'
-                onClickExercise={() => jest.fn()}
+                onClickExercise={jest.fn()}
             />
         )
         const result = screen.findByText('label')
@@ -27,7 +27,7 @@ describe('ExerciseSearchButton', () => {
                 buttonIcon={<div />}
                 buttonTitle='title'
                 buttonLabel='label'
-                onClickExercise={() => jest.fn()}
+                onClickExercise={jest.fn()}
             />
         )
         fireEvent.click(screen.getByText('label'))
