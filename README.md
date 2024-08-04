@@ -1,5 +1,8 @@
 # nextFitness
+https://fitness-next.vercel.app
+
 nextFitness is a workout log and exercise database app built for demonstration purposes only.
+
 
 
 ## Prerequisites
