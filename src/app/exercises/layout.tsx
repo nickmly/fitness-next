@@ -10,7 +10,7 @@ interface Props {
 
 const ExerciseSearchPage = ({ children }: Props) => {
     return (
-        <div className='w-full max-w-screen-xl'>
+        <div className='w-full max-w-screen-xl m-5 lg:mx-10'>
             <ExerciseSearchButton
                 variant='outline'
                 buttonIcon={<SearchIcon />}

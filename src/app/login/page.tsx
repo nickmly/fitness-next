@@ -25,7 +25,7 @@ const LoginPage = async () => {
         redirect("/")
     }
     return (
-        <div className='flex flex-col gap-2 bg-muted p-6 rounded-lg'>
+        <div className='flex flex-col items-center gap-4 bg-muted p-6 rounded-lg m-5 lg:mx-10 w-60 max-h-60'>
             <h1 className='text-2xl text-center font-bold mb-6'>Login</h1>
             {Object.values(providerMap).map((provider) => (
                 <form
