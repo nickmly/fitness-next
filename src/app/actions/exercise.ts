@@ -3,7 +3,7 @@ import prisma from '../../../prisma/client'
 
 export async function getExerciseBySlug(slug: string) {
     try {
-        const exercise = await prisma.exercise.findUnique({
+        return await prisma.exercise.findUnique({
             select: {
                 slug: true,
                 name: true,
@@ -17,7 +17,6 @@ export async function getExerciseBySlug(slug: string) {
                 slug
             }
         })
-        return exercise
     }
     catch (e) {
         return false
@@ -26,7 +25,7 @@ export async function getExerciseBySlug(slug: string) {
 
 export async function searchExercises(term: string) {
     try {
-        const exercises = await prisma.exercise.findMany({
+        return await prisma.exercise.findMany({
             select: {
                 slug: true,
                 name: true,
@@ -38,7 +37,35 @@ export async function searchExercises(term: string) {
                 }
             }
         })
-        return exercises
+    }
+    catch (e) {
+        return false
+    }
+}
+
+export async function getExercisesByMuscle(muscle: string) {
+    muscle = muscle.replace('-', ' ')
+    try {
+        return await prisma.exercise.findMany({
+            select: {
+                slug: true,
+                name: true
+            },
+            where: {
+                OR: [
+                    {
+                        primaryMuscles: {
+                            has: muscle
+                        }
+                    },
+                    {
+                        secondaryMuscles: {
+                            has: muscle
+                        }
+                    }
+                ]
+            }
+        })
     }
     catch (e) {
         return false
