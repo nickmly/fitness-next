@@ -16,6 +16,7 @@ const ExerciseMusclePage = async ({ params }: Props) => {
     }
     return (
         <>
+            <h2 className='text-xl font-bold capitalize mb-5'>{params.muscle} exercises</h2>
             <div className='flex flex-col gap-2'>
                 {exercises.map(e =>
                     <Link key={e.slug} className='w-full' href={`/exercises/${e.slug}`}>

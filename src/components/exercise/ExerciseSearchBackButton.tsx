@@ -3,6 +3,7 @@ import React from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '../ui/button'
+import { ArrowLeft } from 'lucide-react'
 
 const ExerciseSearchBackButton = () => {
     const params = useParams()
@@ -11,7 +12,10 @@ const ExerciseSearchBackButton = () => {
     }
     return (
         <Link href='/exercises'>
-            <Button variant='outline' className='mb-5'>Go Back</Button>
+
+            <Button variant='outline' className='flex gap-2 items-center mb-5'>
+                <ArrowLeft />Go Back
+            </Button>
         </Link>
     )
 }
