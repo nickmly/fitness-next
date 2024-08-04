@@ -10,7 +10,7 @@ interface Props {
 }
 
 const ExercisePage = async ({ params: { slug } }: Props) => {
-    const exercise: Partial<Exercise> | null = await getExerciseBySlug(slug)
+    const exercise: Partial<Exercise> | null | boolean = await getExerciseBySlug(slug)
     if (!exercise) {
         return <p>Exercise not found</p>
     }
