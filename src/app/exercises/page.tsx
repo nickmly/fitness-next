@@ -1,22 +1,9 @@
 import { Button } from '@/components/ui/button'
+import { ALL_MUSCLES } from '@/utils/muscles'
 import Link from 'next/link'
 import React from 'react'
 
-export const ALL_MUSCLES = [
-    'quadriceps',
-    'hamstrings',
-    'calves',
-    'glutes',
-    'triceps',
-    'biceps',
-    'forearms',
-    'shoulders',
-    'abdominals',
-    'lower-back',
-    'middle-back',
-    'lats',
-    'traps'
-]
+
 
 const ExercisesPage = () => {
     return (
