@@ -9,9 +9,11 @@ const ExercisesPage = () => {
     return (
         <div className='flex flex-col gap-2 w-full'>
             {ALL_MUSCLES.map(m =>
-                <Link key={m} className='w-full' href={`/exercises/muscle/${m}`}>
-                    <Button variant='secondary' className='w-full capitalize'>{m}</Button>
-                </Link>
+                <Button asChild key={m} variant='secondary'>
+                    <Link className='w-full capitalize' href={`/exercises/muscle/${m}`}>
+                        {m}
+                    </Link>
+                </Button>
             )}
         </div>
     )

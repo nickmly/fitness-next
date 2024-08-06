@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import GitHubIcon from '@/svgr/github';
 import { ExternalLinkIcon } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const notoSans = Noto_Sans({ subsets: ['latin'] });
 
@@ -29,12 +30,15 @@ export default function RootLayout({
         </main>
         <footer className='flex flex-col w-full h-40 gap-2 justify-center items-center bg-black/50 flex-shrink-0'>
           <p>This site is for demonstration purposes only.</p>
-          <Link href='https://github.com/nickmly/fitness-next' target='_blank' className='flex gap-2 items-center hover:underline'>
-            <GitHubIcon className='fill-primary w-4 h-4' />
-            <span className='flex items-center gap-1'>
-              View the source code <ExternalLinkIcon className='w-3 h-3' />
-            </span>
-          </Link>
+          <Button asChild variant='link'>
+            <Link href='https://github.com/nickmly/fitness-next' target='_blank' className='flex gap-2 items-center'>
+              <GitHubIcon className='fill-primary w-4 h-4' />
+              <span className='flex items-center gap-1'>
+                View the source code <ExternalLinkIcon className='w-3 h-3' />
+              </span>
+            </Link>
+          </Button>
+
         </footer>
         <Toaster />
       </body>

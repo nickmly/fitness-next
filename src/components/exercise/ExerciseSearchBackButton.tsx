@@ -13,7 +13,7 @@ const ExerciseSearchBackButton = () => {
     return (
         <Link href='/exercises'>
 
-            <Button variant='outline' className='flex gap-2 items-center mb-5'>
+            <Button variant='outline' className='flex gap-2 items-center mb-5' title='Go back'>
                 <ArrowLeft />Go Back
             </Button>
         </Link>

@@ -8,6 +8,8 @@ export const ALL_MUSCLES = [
     'forearms',
     'shoulders',
     'abdominals',
+    'adductors',
+    'chest',
     'lower-back',
     'middle-back',
     'lats',

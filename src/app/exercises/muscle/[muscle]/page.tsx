@@ -19,9 +19,11 @@ const ExerciseMusclePage = async ({ params }: Props) => {
             <h2 className='text-xl font-bold capitalize mb-5'>{params.muscle} exercises</h2>
             <div className='flex flex-col gap-2'>
                 {exercises.map(e =>
-                    <Link key={e.slug} className='w-full' href={`/exercises/${e.slug}`}>
-                        <Button variant='secondary' className='w-full capitalize'>{e.name}</Button>
-                    </Link>
+                    <Button asChild key={e.slug} variant='secondary'>
+                        <Link className='w-full' href={`/exercises/${e.slug}`}>
+                            {e.name}
+                        </Link>
+                    </Button>
                 )}
             </div>
         </>

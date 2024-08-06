@@ -19,12 +19,16 @@ export default async function Home() {
         <div className='absolute z-1 top-1/2 -translate-y-1/2 max-w-5xl flex flex-col p-10' style={{ textShadow: 'black 1px 1px' }}>
           <h2 className='text-4xl mb-5'>Working out redefined</h2>
           <div className='flex gap-4'>
-            <Link href='/login'>
-              <Button variant='default' className='uppercase'>Start Logging</Button>
-            </Link>
-            <Link href='/exercises'>
-              <Button variant='secondary' className='uppercase'>Exercise Database</Button>
-            </Link>
+            <Button asChild variant='default'>
+              <Link href='/login' className='uppercase'>
+                Start Logging
+              </Link>
+            </Button>
+            <Button asChild variant='secondary'>
+              <Link href='/exercises' className='uppercase'>
+                Exercise Database
+              </Link>
+            </Button>
           </div>
         </div>
       </div >

@@ -19,9 +19,9 @@ const LogDatePage = async ({ params: { date } }: Props) => {
     const log = await findOrCreateLogOnDate(date)
     if (!log) {
         return (
-            <>
+            <div className='mt-6'>
                 <p>You must be signed in to see logs</p>
-            </>
+            </div>
         )
     }
     return (
